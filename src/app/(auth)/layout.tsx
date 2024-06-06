@@ -6,7 +6,7 @@ interface IAuthLayout {
 
 const AuthLayout: React.FC<IAuthLayout> = ({ children }) => {
   return (
-    <div className='flex justify-center h-screen'>
+    <div className='mx-auto flex justify-center items-center lg:gap-20 min-h-screen'>
       {children}
     </div>
   )
