@@ -8,11 +8,11 @@ export function SideBar() {
       <Sidebar.Items>
         <Sidebar.ItemGroup>
 
-          <Sidebar.Item href="/sign-up" icon={HiChartPie}>
+          <Sidebar.Item href="/" icon={HiChartPie}>
             Daily routines
           </Sidebar.Item>
 
-          <Sidebar.Item href="#" icon={HiViewBoards} label="Pro" labelColor="dark">
+          <Sidebar.Item href="/" icon={HiViewBoards} label="Pro" labelColor="dark">
             Daily expenses
           </Sidebar.Item>
         </Sidebar.ItemGroup>

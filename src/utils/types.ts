@@ -14,5 +14,4 @@ export const enum statusMessage {
 export type ResponseAPI<T> = {
   status: statusMessage;
   data?: T;
-  error?: string;
 };

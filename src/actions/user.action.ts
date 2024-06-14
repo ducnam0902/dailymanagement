@@ -1,15 +1,26 @@
 'use server';
-import { signUpUser, signInUser } from '@/api/user';
+import { signInUser } from '@/api/user';
 import {
   signInValidationSchema,
   SignInParams
 } from '@/utils/ValidationSchema';
-import { ResponseAPI, SignUpParams } from '@/utils/types';
+import { SignUpParams } from '@/utils/types';
 
-export const signUp = async (data: SignUpParams): Promise<ResponseAPI<string>> => {
-  const signUpUserStatus = await signUpUser(data);
-  return signUpUserStatus;
+export const signUp = async (data: SignUpParams): Promise<string> => {
+  try {
+    const response = await fetch(`${process.env.DIGITAL_BASE_API}/user`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+      cache: 'no-store'
+    });
 
+    return response.status.toString();
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const signIn = async (prevState: any, formData: FormData) => {
