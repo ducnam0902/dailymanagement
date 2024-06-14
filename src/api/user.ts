@@ -1,7 +1,6 @@
-import cloudinary from '@/config/cloudinary';
 import { SignInParams } from '@/utils/ValidationSchema';
-import { ResponseAPI, SignUpParams, statusMessage } from '@/utils/types';
-
+import cloudinary from '@/config/cloudinary';
+import { ResponseAPI, statusMessage } from '@/utils/types';
 export const uploadImageToCloudiary = async (image: File): Promise<ResponseAPI<string>> => {
   try {
     const singleImage = image;
@@ -20,38 +19,7 @@ export const uploadImageToCloudiary = async (image: File): Promise<ResponseAPI<s
       data: result.secure_url
     }
   } catch (error) {
-    return {
-      status: statusMessage.FAIL,
-      error: error instanceof Error ? error.message : 'Something went wrong'
-    }
-  }
-}
-
-export const signUpUser = async (payload: SignUpParams): Promise<ResponseAPI<string>> => {
-  try {
-    const response = await fetch(`${process.env.DIGITAL_BASE_API}/user`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-      cache: 'no-store'
-    });
-    if (response.status === 201) {
-      return {
-        status: statusMessage.OK,
-        data: ''
-      }
-    }
-    return {
-      status: statusMessage.FAIL,
-      error: 'Something went wrong'
-    }
-  } catch (error) {
-    return {
-      status: statusMessage.FAIL,
-      error: error instanceof Error ? error.message : 'Something went wrong'
-    }
+    throw error;
   }
 }
 
@@ -71,9 +39,6 @@ export const signInUser = async (payload: SignInParams): Promise<ResponseAPI<{ac
       data
     }
   } catch (error) {
-    return {
-      status: statusMessage.FAIL,
-      error: error instanceof Error ? error.message : 'Something went wrong'
-    }
+    throw error
   }
 }
