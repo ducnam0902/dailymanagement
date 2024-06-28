@@ -22,23 +22,3 @@ export const uploadImageToCloudiary = async (image: File): Promise<ResponseAPI<s
     throw error;
   }
 }
-
-export const signInUser = async (payload: SignInParams): Promise<ResponseAPI<{accessToken: string}>> => {
-  try {
-    const response = await fetch(`${process.env.DIGITAL_BASE_API}/user/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload),
-      cache: 'no-store'
-    });
-    const data = await response.json();
-    return {
-      status: statusMessage.OK,
-      data
-    }
-  } catch (error) {
-    throw error
-  }
-}

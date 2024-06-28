@@ -1,16 +1,41 @@
 'use client'
 
 import React from 'react';
-import FormField from './FormField';
-import { SubmitButton } from './SubmitButton';
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { Button } from 'flowbite-react';
+import FieldController from './FieldController';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signInValidationSchema } from '@/utils/ValidationSchema';
 
-const SignInForm = () => {
+interface IFormInput {
+  email: string
+  password: string
+}
+
+const SignInForm: React.FC = () => {
+  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    },
+    resolver: zodResolver(signInValidationSchema)
+  })
+
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    // const response = await signIn('credentials', {
+    //   email: data.email,
+    //   password: data.password,
+    //   callbackUrl: '/',
+    //   redirect: false
+    // });
+    // console.log(response);
+  }
+
   return (
-    <form >
-      {/* <FormField name='email' label='Email' errorState={state?.email}/>
-      <FormField name='password' label='Password' errorState={state?.password} type='password'/>
-
-      <SubmitButton type="submit" className='mt-8 w-full'>Sign In</SubmitButton> */}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <FieldController name='email' label='Email' control={control} error={errors.email?.message}/>
+      <FieldController name='password' label='Password' control={control} error={errors.password?.message} type='password'/>
+      <Button className='w-full' type='submit' isProcessing={isSubmitting} >Sign In</Button>
     </form>
   )
 }

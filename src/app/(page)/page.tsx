@@ -1,7 +1,9 @@
-export default function Home() {
+
+
+export default function Home( ) {
   return (
-    <>
-      <main>abc</main>
-    </>
+
+    <main>abc</main>
+
   );
 }
