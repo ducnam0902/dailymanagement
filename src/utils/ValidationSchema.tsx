@@ -1,5 +1,4 @@
 import * as z from 'zod';
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/utils/constants';
 import { containsAtLeastCharacter } from '@/utils/helper';
 
 export const signUpValidationSchema = z.object({
@@ -17,25 +16,19 @@ export const signUpValidationSchema = z.object({
     .refine(value => (containsAtLeastCharacter(value, 'lowercase')), { message: 'Password have at least a lowercase character' } )
     .refine(value => (containsAtLeastCharacter(value, 'specialCharacter')), { message: 'Password have at least a special character' } ),
   confirmPassword: z.string().min(6, { message: 'Confirm password have at least 6 characters' }),
-  image: z
-    .instanceof(File)
-    .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), {
-      message: '.jpg, .jpeg, .png and .webp files are accepted.'
-    })
-    .refine((file) => file.size <= MAX_FILE_SIZE, {
-      message: 'Max file size is 5MB.'
-    })
+  image: z.string({ message: 'Image is required' })
 }).superRefine(({ password, confirmPassword }, ctx) => {
   if (confirmPassword !== password) {
     ctx.addIssue({
       code: 'custom',
-      message: 'The passwords did not match',
+      message: 'Confirm password did not match with the password',
       path: ['confirmPassword']
     });
   }
 });
 
 export type SignUpType = z.infer<typeof signUpValidationSchema>;
+
 export const signInValidationSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
   password: z.string().min(6, { message: 'Password have at least 6 characters' })

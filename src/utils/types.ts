@@ -3,7 +3,17 @@ export interface SignUpParams {
   lastName?: string;
   email?: string;
   password?: string;
+  confirmPassword?: string;
   image?: string;
+}
+
+export type ImageResponse = {
+  filePath: string
+}
+
+export const enum INPUT_TYPE {
+  "TEXT",
+  "FILE",
 }
 
 export const enum statusMessage {
@@ -11,7 +21,19 @@ export const enum statusMessage {
   "FAIL",
 }
 
-export type ResponseAPI<T> = {
-  status: statusMessage;
-  data?: T;
-};
+export type ErrorPayloadType = {
+  field: string,
+  message: string | string[]
+}
+
+export type EntityErrorType = {
+  statusCode: number;
+  payload: {
+    errors: ErrorPayloadType[]
+  }
+}
+
+export type HttpErrorType = {
+  statusCode: number;
+  message: string;
+}
