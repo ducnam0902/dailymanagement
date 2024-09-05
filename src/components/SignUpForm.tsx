@@ -1,110 +1,140 @@
 'use client';
 import React, { useState } from 'react';
 import FormField from './FormField';
-import { signUp } from '@/actions/user.action';
-import { Label, FileInput } from 'flowbite-react';
-import { SubmitButton } from './SubmitButton';
 import { signUpValidationSchema } from '@/utils/ValidationSchema';
-import { SignUpParams } from '@/utils/types';
-import { toast } from 'react-toastify';
+import { INPUT_TYPE, SignUpParams } from '@/utils/types';
 import { useRouter } from 'next/navigation';
-import { uploadImageToCloudiary } from '@/api/user';
-
-interface SignUpErrorField {
-  firstName?: string[],
-  lastName?: string[],
-  email?: string[],
-  password?: string[],
-  confirmPassword?: string[],
-  image?: string[],
-}
-
-type keysOfProps = keyof SignUpErrorField;
-
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import envConfig from '@/utils/config';
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/utils/constants';
+import { Button } from 'flowbite-react';
+import userApi from '@/api/user';
+import { handleErrorApiResponse } from '@/utils/helper';
 
 const SignUpForm: React.FC = () => {
-  const [errors, setErrors] = useState<SignUpErrorField>({});
-  const navigate = useRouter();
+  const router = useRouter();
+  const [file, setFile] = useState<File | null>(null);
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting }
+  } = useForm<SignUpParams>({
+    resolver: zodResolver(signUpValidationSchema)
+  });
 
-  const validateData = (formData: FormData):boolean => {
-    const validatedFields = signUpValidationSchema.safeParse({
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      image: formData.get('image'),
-      confirmPassword: formData.get('confirmPassword')
-    });
-    if (!validatedFields.success) {
-      const flattenField = validatedFields.error.flatten().fieldErrors;
-      const errorField:SignUpErrorField = Object.keys(flattenField)
-        .reduce((total: SignUpErrorField, item) => ({ ...total, [item]: flattenField[item as keysOfProps] }), {});
-      setErrors(errorField);
+  const isValidImage = (file: File | null): boolean => {
+    if (file && file?.size > MAX_FILE_SIZE) {
+      setError('image', { message: 'Max file size is 5MB.' });
       return false;
     }
-    setErrors({});
-    return true;
-  }
-
-  const handleSignUp = async (formData: FormData) => {
-    const isValidData = validateData(formData);
-    if (isValidData) {
-      try {
-        const uploadedImage = await uploadImageToCloudiary(formData.get('image') as File);
-        const data: SignUpParams= {
-          firstName: formData.get('firstName') as string,
-          lastName: formData.get('lastName') as string,
-          image: uploadedImage.data,
-          email: formData.get('email') as string,
-          password:  formData.get('password') as string
-        }
-        const responseSignUp = await signUp(data);
-        if (responseSignUp === '201') {
-          toast.success('Created user successfully!');
-          navigate.push('/sign-in')
-        } else {
-          throw Error('Something went wrong when sign up user');
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error('Something went wrong when sign up user');
-      }
+    if (file && !ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      setError('image', {
+        message: '.jpg, .jpeg, .png and .webp files are accepted.'
+      });
+      return false;
     }
+
+    return true;
   };
 
+  const uploadAvatarImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const body = formData;
+    let result: string | null = null;
+    try {
+      const data = await userApi.uploadImage(body);
+      result = data.filePath;
+    } catch (error) {
+      handleErrorApiResponse(error, setError);
+    }
+    if (result !== null) {
+      return result;
+    }
+  }
+
+  const createUser = async (data: SignUpParams) => {
+    try {
+      await userApi.createUser(data);
+      router.push('/sign-in');
+    } catch (error) {
+      handleErrorApiResponse(error, setError);
+    }
+  }
+
+  const onSubmit = handleSubmit( async (data) => {
+    const validImage = isValidImage(file);
+    if (validImage) {
+      const resultImage = await uploadAvatarImage(file as File);
+      const payload = {
+        ...data,
+        image: resultImage
+      }
+
+      await createUser(payload);
+    }
+  });
   return (
-    <form
-      className="flex max-w-md flex-col gap-4"
-      action={handleSignUp}
-    >
+    <form className="flex max-w-md flex-col gap-4" onSubmit={onSubmit}>
       <div className="md:flex gap-4 ">
-        <div className='md:basis-1/2'>
-          <FormField name='firstName' label='First name' errorState={errors?.firstName}/>
+        <div className="md:basis-1/2">
+          <FormField
+            label="First name"
+            name="firstName"
+            control={control}
+            error={errors.firstName}
+          />
         </div>
-        <div className='md:basis-1/2'>
-          <FormField name='lastName' label='Last name' errorState={errors?.lastName}/>
+        <div className="md:basis-1/2">
+          <FormField
+            label="Last name"
+            name="lastName"
+            control={control}
+            error={errors.lastName}
+          />
         </div>
       </div>
-      <FormField name='email' label='Email' type="email" errorState={errors?.email}/>
-      <FormField name='password' label='Password' type="password" errorState={errors?.password}/>
-      <FormField name='confirmPassword' label='Confirm password' type="password" errorState={errors?.confirmPassword}/>
+      <FormField
+        label="Email"
+        type="email"
+        name="email"
+        control={control}
+        error={errors.email}
+      />
+      <FormField
+        label="Password"
+        type="password"
+        name="password"
+        control={control}
+        error={errors.password}
+      />
+      <FormField
+        label="Confirm password"
+        type="password"
+        name="confirmPassword"
+        control={control}
+        error={errors.confirmPassword}
+      />
       <div id="image" className="max-w-md">
-        <div className="mb-2 block">
-          <Label htmlFor="image" value="Upload file" className="text-md" />
-        </div>
-        <FileInput
-          id="image"
-          name={'image'}
-          color={ !!errors.image && errors.image[0] !== '' ? 'failure' : 'gray'}
-          helperText={
-            errors?.image &&
-          <>
-            <span className="font-medium">{errors.image.join('\n')}</span>
-          </>
-          }
+        <FormField
+          kindOfInput={INPUT_TYPE.FILE}
+          label="Upload image"
+          name="image"
+          control={control}
+          error={errors.image}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setFile(file);
+              setValue('image', envConfig.NEXT_PUBLIC_URL + file.name);
+            }
+          }}
         />
       </div>
-      <SubmitButton>Sign Up</SubmitButton>
+      <Button type="submit" isProcessing={isSubmitting}>Sign Up</Button>
     </form>
   );
 };
