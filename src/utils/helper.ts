@@ -1,7 +1,7 @@
 import { EntityError, HttpError } from '@/lib/http';
-import { SignUpParams } from '@/utils/types';
 import { UseFormSetError } from 'react-hook-form';
 import { toast } from 'react-toastify';
+import { SignUpType } from './formType';
 type allType = 'uppercase' | 'lowercase' | 'number' | 'specialCharacter';
 
 export const containsAtLeastCharacter = (ch: string, type: allType):boolean => {
@@ -25,11 +25,10 @@ export const containsAtLeastCharacter = (ch: string, type: allType):boolean => {
 
 export const handleErrorApiResponse = (error: any, setError: UseFormSetError<any> | null) => {
   if (error instanceof EntityError && !!setError) {
-    error.payload.errors?.forEach(item => setError(item.field as keyof SignUpParams, {
+    error.payload.errors?.forEach(item => setError(item.field as keyof SignUpType, {
       message: Array.isArray(item.message) ? item.message.join(' /n') : item.message
     }));
-  }
-  if (error instanceof HttpError) {
+  } else if (error instanceof HttpError) {
     toast.error(error.message)
   } else {
     toast.error('Something went wrong when calling data');

@@ -1,8 +1,7 @@
 'use client';
 import React, { useState } from 'react';
+
 import FormField from './FormField';
-import { signUpValidationSchema } from '@/utils/ValidationSchema';
-import { INPUT_TYPE, SignUpParams } from '@/utils/types';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +10,9 @@ import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from '@/utils/constants';
 import { Button } from 'flowbite-react';
 import userApi from '@/api/user';
 import { handleErrorApiResponse } from '@/utils/helper';
+import { INPUT_TYPE } from '@/utils/constants';
+import { SignUpType, signUpValidationSchema } from '@/utils/formType';
+
 
 const SignUpForm: React.FC = () => {
   const router = useRouter();
@@ -21,7 +23,7 @@ const SignUpForm: React.FC = () => {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting }
-  } = useForm<SignUpParams>({
+  } = useForm<SignUpType>({
     resolver: zodResolver(signUpValidationSchema)
   });
 
@@ -44,19 +46,17 @@ const SignUpForm: React.FC = () => {
     const formData = new FormData();
     formData.append('file', file);
     const body = formData;
-    let result: string | null = null;
+    let result: string = '';
     try {
       const data = await userApi.uploadImage(body);
       result = data.filePath;
     } catch (error) {
       handleErrorApiResponse(error, setError);
     }
-    if (result !== null) {
-      return result;
-    }
+    return result;
   }
 
-  const createUser = async (data: SignUpParams) => {
+  const createUser = async (data: SignUpType) => {
     try {
       await userApi.createUser(data);
       router.push('/sign-in');
@@ -68,7 +68,7 @@ const SignUpForm: React.FC = () => {
   const onSubmit = handleSubmit( async (data) => {
     const validImage = isValidImage(file);
     if (validImage) {
-      const resultImage = await uploadAvatarImage(file as File);
+      const resultImage: string = await uploadAvatarImage(file as File);
       const payload = {
         ...data,
         image: resultImage

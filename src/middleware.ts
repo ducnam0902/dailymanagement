@@ -5,13 +5,13 @@ const authPaths = ['/sign-in', '/sign-up'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const sessionToken = request.cookies.get('sessionToken');
+  const accessToken = request.cookies.get('accessToken');
 
-  if (privatePaths.some(path => pathname === path) && !sessionToken) {
+  if (privatePaths.some(path => pathname === path) && !accessToken) {
     return NextResponse.redirect(new URL('/sign-in', request.url))
   }
 
-  if ( authPaths.some(path => pathname.startsWith(path)) && !!sessionToken) {
+  if ( authPaths.some(path => pathname.startsWith(path)) && !!accessToken) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 

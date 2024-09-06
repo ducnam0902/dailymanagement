@@ -1,9 +1,9 @@
 import envConfig from '@/utils/config';
-import { HttpErrorType, EntityErrorType, ErrorPayloadType } from '@/utils/types';
+import { HttpErrorType, EntityErrorType, ErrorPayloadType, UserSignInSuccess } from '@/utils/types';
 import httpStatus from 'http-status';
 
 type CustomOptions = Omit<RequestInit, 'method'>;
-
+export const isClient = () => typeof window !== 'undefined';
 export class HttpError extends Error {
   statusCode: number;
   message: string;
@@ -75,6 +75,14 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
       message: payload as string
     });
   }
+
+  if (isClient()) {
+    if (url === '/user/login') {
+      const { accessToken } = payload as UserSignInSuccess;
+      localStorage.setItem('sessionToken', accessToken);
+    }
+  }
+
 
   return payload as Response;
 }
