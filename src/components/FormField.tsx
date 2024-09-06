@@ -1,16 +1,17 @@
 import React from 'react'
 import { Label, TextInput, TextInputProps, FileInput } from 'flowbite-react';
-import { Control, Controller, FieldError } from 'react-hook-form';
-import { INPUT_TYPE } from '@/utils/types';
+import { Control, Controller, FieldError, FieldValues, Path } from 'react-hook-form';
+import { INPUT_TYPE } from '@/utils/constants';
 
-interface IFormField extends TextInputProps {
+interface IFormField<T extends FieldValues> extends TextInputProps {
     kindOfInput?: INPUT_TYPE,
-    name: string;
+    name: Path<T>;
     label: string;
-    control: Control;
+    control: Control<T>;
     error: FieldError | undefined;
 }
-const FormField:React.FC<IFormField> = ({ kindOfInput = INPUT_TYPE.TEXT, name, label, control, error, ...props }) => {
+
+function FormField<T extends FieldValues>({ kindOfInput = INPUT_TYPE.TEXT, name, label, control, error, ...props }: IFormField<T>) {
   return (
     <div className='mb-2' >
       <div className="mb-2 block">

@@ -6,3 +6,7 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/webp'
 ]
 
+export const enum INPUT_TYPE {
+  "TEXT",
+  "FILE",
+}

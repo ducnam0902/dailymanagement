@@ -17,7 +17,7 @@ const Header = () => {
           arrowIcon={false}
           inline
           label={
-            <Image className='rounded-full' src={defaultAvatar} alt='Default Avatar' width={40}/>
+            <Image className='rounded-full' src={defaultAvatar} alt='Default Avatar' width={40} height={40}/>
           }
         >
           <DropdownHeader>

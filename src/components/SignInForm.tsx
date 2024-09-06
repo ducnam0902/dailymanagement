@@ -1,14 +1,57 @@
 'use client'
-
 import React from 'react';
+import { useForm } from 'react-hook-form';
+import FormField from './FormField';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from 'flowbite-react';
+import { SignInType, signInValidationSchema } from '@/utils/formType';
+import userApi from '@/api/user';
+import { handleErrorApiResponse } from '@/utils/helper';
+import { useRouter } from 'next/navigation';
+
 
 const SignInForm = () => {
-  return (
-    <form >
-      {/* <FormField name='email' label='Email' errorState={state?.email}/>
-      <FormField name='password' label='Password' errorState={state?.password} type='password'/>
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting }
+  } = useForm<SignInType>({
+    resolver: zodResolver(signInValidationSchema)
+  });
 
-      <SubmitButton type="submit" className='mt-8 w-full'>Sign In</SubmitButton> */}
+  const router = useRouter();
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const response = await userApi.signIn(data);
+      const result = await userApi.signInServer(response);
+      if (result.message === 'Success') {
+        router.push('/');
+      }
+    } catch (error) {
+      handleErrorApiResponse(error, setError);
+    }
+
+  });
+
+  return (
+    <form onSubmit={onSubmit}>
+      <FormField
+        label="Email"
+        type="email"
+        name="email"
+        control={control}
+        error={errors.email}
+      />
+      <FormField
+        label="Password"
+        type="password"
+        name="password"
+        control={control}
+        error={errors.password}
+      />
+      <Button className='mt-6 w-full' type="submit" isProcessing={isSubmitting}>Sign In</Button>
     </form>
   )
 }
