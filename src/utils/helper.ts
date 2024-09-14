@@ -23,7 +23,7 @@ export const containsAtLeastCharacter = (ch: string, type: allType):boolean => {
   }
 }
 
-export const handleErrorApiResponse = (error: any, setError: UseFormSetError<any> | null) => {
+export const handleErrorApiResponse = (error: any, setError?: UseFormSetError<any> | null) => {
   if (error instanceof EntityError && !!setError) {
     error.payload.errors?.forEach(item => setError(item.field as keyof SignUpType, {
       message: Array.isArray(item.message) ? item.message.join(' /n') : item.message

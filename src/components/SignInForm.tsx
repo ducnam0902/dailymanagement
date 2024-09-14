@@ -8,6 +8,8 @@ import { SignInType, signInValidationSchema } from '@/utils/formType';
 import userApi from '@/api/user';
 import { handleErrorApiResponse } from '@/utils/helper';
 import { useRouter } from 'next/navigation';
+import { useAppContext } from '@/AppProvider';
+import { toast } from 'react-toastify';
 
 
 const SignInForm = () => {
@@ -21,13 +23,17 @@ const SignInForm = () => {
   });
 
   const router = useRouter();
+  const { setUser } = useAppContext();
 
   const onSubmit = handleSubmit(async (data) => {
     try {
       const response = await userApi.signIn(data);
       const result = await userApi.signInServer(response);
-      if (result.message === 'Success') {
+      if (result.ok) {
+        setUser(response);
+        toast.success('Sign in successfully')
         router.push('/');
+        router.refresh();
       }
     } catch (error) {
       handleErrorApiResponse(error, setError);

@@ -12,6 +12,7 @@ import userApi from '@/api/user';
 import { handleErrorApiResponse } from '@/utils/helper';
 import { INPUT_TYPE } from '@/utils/constants';
 import { SignUpType, signUpValidationSchema } from '@/utils/formType';
+import { toast } from 'react-toastify';
 
 
 const SignUpForm: React.FC = () => {
@@ -59,6 +60,7 @@ const SignUpForm: React.FC = () => {
   const createUser = async (data: SignUpType) => {
     try {
       await userApi.createUser(data);
+      toast.success('Sign up successfully')
       router.push('/sign-in');
     } catch (error) {
       handleErrorApiResponse(error, setError);

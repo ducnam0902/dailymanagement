@@ -1,6 +1,7 @@
-import Header from '@/components/Header'
+
 import SideBar from '@/components/SideBar'
 import React, { ReactElement } from 'react'
+import Header from '@/components/Header'
 
 interface IMainLayout {
     children: ReactElement

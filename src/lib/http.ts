@@ -1,5 +1,5 @@
 import envConfig from '@/utils/config';
-import { HttpErrorType, EntityErrorType, ErrorPayloadType, UserSignInSuccess } from '@/utils/types';
+import { HttpErrorType, EntityErrorType, ErrorPayloadType, UserResType } from '@/utils/types';
 import httpStatus from 'http-status';
 
 type CustomOptions = Omit<RequestInit, 'method'>;
@@ -38,6 +38,11 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
     'Content-Type': 'application/json'
   };
 
+  if (isClient()) {
+    const accessToken = localStorage.getItem('accessToken');
+    baseHeaders.Authorization = `Bearer ${accessToken}`;
+  }
+
   let body: FormData | string | undefined = undefined;
   if (options?.body instanceof FormData) {
     body = options.body
@@ -55,7 +60,7 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
     body
   })
 
-  const payload = await response.json();
+  const payload = await response?.json();
   if (!response.ok) {
     if (response.status === httpStatus.UNAUTHORIZED && Array.isArray((payload).errors)) {
       throw new EntityError({
@@ -76,19 +81,11 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
     });
   }
 
-  if (isClient()) {
-    if (url === '/user/login') {
-      const { accessToken } = payload as UserSignInSuccess;
-      localStorage.setItem('sessionToken', accessToken);
-    }
-  }
-
-
   return payload as Response;
 }
 
 const http = {
-  get<Respond>(url: string, options: Omit<CustomOptions, 'body'> | undefined, isServerApi: boolean = true) {
+  get<Respond>(url: string, options?: Omit<CustomOptions, 'body'> | undefined, isServerApi: boolean = true) {
     return request<Respond>(url, 'GET', isServerApi, options);
   },
   post<Respond>(url: string, body: any, options?: CustomOptions | undefined, isServerApi: boolean = true) {
