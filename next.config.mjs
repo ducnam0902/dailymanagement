@@ -6,6 +6,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'dailymanagement.zeabur.app',
         pathname: '**'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '**'
       }
     ]
   },
@@ -13,6 +18,10 @@ const nextConfig = {
     config.resolve.fallback = { fs: false };
 
     return config;
+  },
+  env: {
+    NEXT_PUBLIC_SERVER_API: process.env.NEXT_PUBLIC_SERVER_API,
+    NEXT_PUBLIC_BASE_API: process.env.NEXT_PUBLIC_BASE_API
   }
 };
 

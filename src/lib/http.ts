@@ -1,7 +1,6 @@
 import envConfig from '@/utils/config';
-import { HttpErrorType, EntityErrorType, ErrorPayloadType, UserResType } from '@/utils/types';
+import { HttpErrorType, EntityErrorType, ErrorPayloadType } from '@/utils/types';
 import httpStatus from 'http-status';
-
 type CustomOptions = Omit<RequestInit, 'method'>;
 export const isClient = () => typeof window !== 'undefined';
 export class HttpError extends Error {
@@ -29,7 +28,7 @@ export class EntityError extends Error {
 }
 
 export const request = async <Response> (url: string, method: 'GET' | 'POST' | 'PUT'| 'DELETE', isServerApi: boolean, options?: CustomOptions) => {
-  const prefixUrl: string = isServerApi ? envConfig.NEXT_PUBLIC_BASE_API : envConfig.NEXT_PUBLIC_URL;
+  const prefixUrl: string = isServerApi ? envConfig.NEXT_PUBLIC_SERVER_API : '';
   const fullUrl: string = url.startsWith('/') ? `${prefixUrl}${url}` : `${prefixUrl}/${url}`;
 
   const baseHeaders: {
