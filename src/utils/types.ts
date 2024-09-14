@@ -19,11 +19,15 @@ export type ImageResponse = {
   filePath: string
 }
 
-export type UserSignInSuccess = {
+export type UserResType = {
   firstName: string;
   lastName: string;
   email: string;
   accessToken: string;
   refreshToken: string;
   image: string;
+}
+
+export type ResponseStatus = {
+  ok: boolean
 }

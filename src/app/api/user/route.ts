@@ -9,7 +9,20 @@ export async function POST(request: Request) {
   cookieStore.set('refreshToken', refreshToken);
 
   return new Response(JSON.stringify({
-    message: 'Success'
+    ok: true
+  }), {
+    status: 200
+  })
+}
+
+export async function GET() {
+  const cookieStore = cookies()
+
+  cookieStore.delete('accessToken');
+  cookieStore.delete('refreshToken');
+
+  return new Response(JSON.stringify({
+    ok: true
   }), {
     status: 200
   })
