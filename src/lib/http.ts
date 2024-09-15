@@ -28,7 +28,7 @@ export class EntityError extends Error {
 }
 
 export const request = async <Response> (url: string, method: 'GET' | 'POST' | 'PUT'| 'DELETE', isServerApi: boolean, options?: CustomOptions) => {
-  const prefixUrl: string = isServerApi ? envConfig.NEXT_PUBLIC_BASE_API : isClient() ? window.location.origin : envConfig.NEXT_PUBLIC_URL;
+  const prefixUrl: string = isServerApi ? envConfig.NEXT_PUBLIC_SERVER_API : '';
   const fullUrl: string = url.startsWith('/') ? `${prefixUrl}${url}` : `${prefixUrl}/${url}`;
 
   const baseHeaders: {
