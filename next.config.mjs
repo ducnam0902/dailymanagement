@@ -18,6 +18,10 @@ const nextConfig = {
     config.resolve.fallback = { fs: false };
 
     return config;
+  },
+  env: {
+    NEXT_PUBLIC_SERVER_API: process.env.NEXT_PUBLIC_SERVER_API,
+    NEXT_PUBLIC_BASE_API: process.env.NEXT_PUBLIC_BASE_API
   }
 };
 
