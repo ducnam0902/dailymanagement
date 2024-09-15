@@ -6,6 +6,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'dailymanagement.zeabur.app',
         pathname: '**'
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        pathname: '**'
       }
     ]
   },

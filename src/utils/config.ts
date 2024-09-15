@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 const configSchema = z.object({
-  NEXT_PUBLIC_BASE_API: z.string(),
+  NEXT_PUBLIC_SERVER_API: z.string(),
   NEXT_PUBLIC_URL: z.string()
 });
 
 const configProject = configSchema.safeParse({
-  NEXT_PUBLIC_BASE_API: process.env.NEXT_PUBLIC_BASE_API,
+  NEXT_PUBLIC_SERVER_API: process.env.NEXT_PUBLIC_SERVER_API,
   NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL
 })
 
