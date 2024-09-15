@@ -131,7 +131,7 @@ const SignUpForm: React.FC = () => {
             const file = e.target.files?.[0];
             if (file) {
               setFile(file);
-              setValue('image', envConfig.NEXT_PUBLIC_URL + file.name);
+              setValue('image', envConfig.NEXT_PUBLIC_BASE_API + file.name);
             }
           }}
         />
