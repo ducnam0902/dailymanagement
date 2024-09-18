@@ -1,4 +1,3 @@
-
 import http from '@/lib/http'
 import { ImageResponse, ResponseStatus, UserResType } from '@/utils/types';
 import { SignInType, SignUpType } from '@/utils/formType';

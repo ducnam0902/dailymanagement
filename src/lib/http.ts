@@ -1,5 +1,5 @@
 import envConfig from '@/utils/config';
-import { HttpErrorType, EntityErrorType, ErrorPayloadType } from '@/utils/types';
+import { HttpErrorType, EntityErrorType, ErrorPayloadType, UserResType } from '@/utils/types';
 import httpStatus from 'http-status';
 type CustomOptions = Omit<RequestInit, 'method'>;
 export const isClient = () => typeof window !== 'undefined';
@@ -30,7 +30,6 @@ export class EntityError extends Error {
 export const request = async <Response> (url: string, method: 'GET' | 'POST' | 'PUT'| 'DELETE', isServerApi: boolean, options?: CustomOptions) => {
   const prefixUrl: string = isServerApi ? envConfig.NEXT_PUBLIC_SERVER_API : '';
   const fullUrl: string = url.startsWith('/') ? `${prefixUrl}${url}` : `${prefixUrl}/${url}`;
-
   const baseHeaders: {
     [key: string]: string
   } = options?.body instanceof FormData ? {} : {
@@ -38,8 +37,11 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
   };
 
   if (isClient()) {
-    const accessToken = localStorage.getItem('accessToken');
-    baseHeaders.Authorization = `Bearer ${accessToken}`;
+    const userStorage = localStorage.getItem('user');
+    if (!!userStorage) {
+      const user = JSON.parse(userStorage);
+      baseHeaders.Authorization = `Bearer ${user.accessToken}`;
+    }
   }
 
   let body: FormData | string | undefined = undefined;
@@ -74,6 +76,15 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
       });
     }
 
+    // if (response.status === httpStatus.UNAUTHORIZED) {
+    //   if (isClient()) {
+    //     localStorage.removeItem('user');
+    //     //handle signOut server
+    //   }
+
+
+    // }
+
     throw new HttpError({
       statusCode: response.status,
       message: payload as string
@@ -93,7 +104,7 @@ const http = {
       body
     });
   },
-  put<Respond>(url: string, body: any, options?: CustomOptions | undefined, isServerApi: boolean = true) {
+  put<Respond>(url: string, body?: any, options?: CustomOptions | undefined, isServerApi: boolean = true) {
     return request<Respond>(url, 'PUT', isServerApi, {
       ...options,
       body

@@ -39,3 +39,17 @@ export const signInValidationSchema = z.object({
 });
 
 export type SignInType = z.infer<typeof signInValidationSchema>;
+
+export type NoteType = {
+  id: number,
+  note: string,
+  isCompleted: boolean,
+  date: string,
+  type: string
+}
+
+export type CreateNoteDto = Pick<NoteType, 'note' | 'type'>
+
+export const UpdateNoteValidationSchema = z.object({
+  isCompleted: z.boolean()
+})

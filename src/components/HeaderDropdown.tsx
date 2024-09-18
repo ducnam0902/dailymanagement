@@ -40,7 +40,6 @@ const HeaderDropdown = () => {
         </DropdownHeader>
         <DropdownItem>Dashboard</DropdownItem>
         <DropdownItem>Settings</DropdownItem>
-        <DropdownItem>Earnings</DropdownItem>
         <DropdownDivider />
         <DropdownItem onClick={handleSignOut}>Sign out</DropdownItem>
       </Dropdown>

@@ -9,4 +9,5 @@ export const ACCEPTED_IMAGE_TYPES = [
 export const enum INPUT_TYPE {
   "TEXT",
   "FILE",
+  "SELECT"
 }
