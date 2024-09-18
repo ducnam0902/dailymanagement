@@ -7,11 +7,9 @@ import { isClient } from './lib/http';
 const AppContext = createContext<{
     user: UserResType | null,
     setUser: (user: UserResType | null) => void,
-    isAuthenicated: boolean
       }>({
         user: null,
-        setUser: () => {},
-        isAuthenicated: false
+        setUser: () => {}
       });
 
 export const useAppContext = () => {
@@ -34,8 +32,7 @@ export default function AppProvider({ children }: {children: React.ReactNode}) {
 
   }
 
-  const isAuthenicated = Boolean(user);
-  return <AppContext.Provider value={{ user, setUser, isAuthenicated }}>
+  return <AppContext.Provider value={{ user, setUser }}>
     {children}
   </AppContext.Provider>
 }

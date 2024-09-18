@@ -13,7 +13,9 @@ const MainLayout: React.FC<IMainLayout> = ({ children }) => {
       <Header/>
       <main className='flex h-screen'>
         <SideBar/>
-        {children}
+        <div className='w-full'>
+          {children}
+        </div>
       </main>
     </>
   )
