@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react';
 import {
   Label,
   TextInput,
   TextInputProps,
   FileInput,
-  Select,
-} from "flowbite-react";
+  Select
+} from 'flowbite-react';
 import {
   Control,
   Controller,
   FieldError,
   FieldValues,
-  Path,
-} from "react-hook-form";
-import { INPUT_TYPE } from "@/utils/constants";
+  Path
+} from 'react-hook-form';
+import { INPUT_TYPE } from '@/utils/constants';
 
 interface IFormField<T extends FieldValues> extends TextInputProps {
   kindOfInput?: INPUT_TYPE;
@@ -49,7 +49,7 @@ function FormField<T extends FieldValues>({
             return (
               <FileInput
                 id={name}
-                color={!!error?.message ? "failure" : "gray"}
+                color={!!error?.message ? 'failure' : 'gray'}
                 helperText={error?.message}
                 {...props}
               />
@@ -60,7 +60,7 @@ function FormField<T extends FieldValues>({
             return (
               <Select id={name} {...field}>
                 {options?.map((item: string) => (
-                  <option>{item}</option>
+                  <option key={item?.toString()}>{item}</option>
                 ))}
               </Select>
             );
@@ -69,7 +69,7 @@ function FormField<T extends FieldValues>({
           return (
             <TextInput
               id={name}
-              color={!!error?.message ? "failure" : "gray"}
+              color={!!error?.message ? 'failure' : 'gray'}
               helperText={error?.message}
               {...field}
               {...props}
