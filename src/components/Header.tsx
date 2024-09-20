@@ -6,6 +6,7 @@ import { Navbar, NavbarBrand } from 'flowbite-react';
 import dynamic from 'next/dynamic';
 import Loading from '@/app/loading';
 import routes from '@/utils/routes';
+import SidebarMobile from './SidebarMobile';
 
 const HeaderDropdown = dynamic(() => import('./HeaderDropdown'), { ssr: false, loading: () => <Loading loading size={40} cssOverride={{ margin: 0 }}/> })
 
@@ -16,7 +17,11 @@ const Header = () => {
         <NavbarBrand as={Link} href={routes.home}>
           <Image src={logo} className="mr-3" alt="Daily management Logo" width={100} height={50} priority={true} />
         </NavbarBrand>
-        <HeaderDropdown/>
+        <div className='flex'>
+          <HeaderDropdown/>
+          <SidebarMobile/>
+        </div>
+
       </Navbar>
       <hr/>
     </>

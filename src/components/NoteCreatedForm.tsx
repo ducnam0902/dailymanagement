@@ -46,28 +46,29 @@ const NoteForm = () => {
   });
 
   return (
-    <form onSubmit={handleCreateNote} className="flex items-start py-4 gap-4">
-      <div className="basis-9/12">
+    <form onSubmit={handleCreateNote} className="flex items-start py-4 gap-2 md:gap-4">
+      <div className="basis-4/12 sm:basis-8/12">
         <FormField
           name="note"
           control={control}
           error={errors.note}
-          className="w-full"
+          className='w-full'
+
         />
       </div>
-      <div className="basis-1/6">
+      <div className="basis-6/12 sm:basis-3/12">
         <FormField
           name="type"
           control={control}
           error={errors.type}
-          className="w-full"
           options={options}
           kindOfInput={INPUT_TYPE.SELECT}
+          className='w-full'
         />
       </div>
-      <div className="basis-1/12 flex justify-end">
-        <Button className=" w-fit" type="submit" color="success">
-          Create note
+      <div className='basis-2/12 sm:basis-1/12'>
+        <Button type="submit" color="success" className='w-full'>
+          Create
         </Button>
       </div>
     </form>
