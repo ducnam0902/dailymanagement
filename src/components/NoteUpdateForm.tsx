@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import FormField from './FormField';
 import { useForm } from 'react-hook-form';
@@ -10,6 +11,7 @@ import { handleErrorApiResponse } from '@/utils/helper';
 import noteApi from '@/api/note';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { useAppContext } from '@/AppProvider';
 
 type UpdateNoteType = z.infer<typeof UpdateNoteValidationSchema>;
 const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
@@ -24,8 +26,10 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
     }
   });
   const router = useRouter();
+  const { setIsLoading } =useAppContext();
   const handleUpdateNote = handleSubmit(async (data) => {
     try {
+      setIsLoading(true);
       if (data.isCompleted) {
         const response: NoteType = await noteApi.markNoteCompleted(id);
         if (response.isCompleted === data.isCompleted) {
@@ -35,6 +39,8 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
       }
     } catch (error) {
       handleErrorApiResponse(error);
+    } finally {
+      setIsLoading(false);
     }
   });
 

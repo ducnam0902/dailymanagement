@@ -1,11 +1,9 @@
 'use client';
 import React from 'react';
-import ClipLoader from 'react-spinners/ClipLoader';
+import PuffLoader from 'react-spinners/PuffLoader';
+import Image from 'next/image';
+import logo from '@/assets/logo.png';
 import { LoaderSizeProps } from 'react-spinners/helpers/props';
-const override = {
-  display: 'block',
-  margin: '100px auto'
-};
 
 type ILoading = {
     loading?: boolean;
@@ -14,14 +12,18 @@ type ILoading = {
 
 const Loading: React.FC<ILoading> = ({ loading, size = 150, ...props }) => {
   return (
-    <ClipLoader
-      color="44ce42"
-      loading={loading}
-      cssOverride={override}
-      size={size}
-      aria-label="Loading Spinner"
-      {...props}
-    />
+    <div className='flex justify-center items-center h-screen'>
+      <Image src={logo} alt="Daily management Logo" width={100} height={50} priority={true} />
+      <PuffLoader
+        color="#44ce42"
+        loading={loading}
+        className="!absolute"
+        size={size}
+        aria-label="Loading Spinner"
+        {...props}
+      />
+    </div>
+
   );
 };
 

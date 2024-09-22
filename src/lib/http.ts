@@ -1,6 +1,8 @@
 import envConfig from '@/utils/config';
-import { HttpErrorType, EntityErrorType, ErrorPayloadType, UserResType } from '@/utils/types';
+import { HttpErrorType, EntityErrorType, ErrorPayloadType } from '@/utils/types';
 import httpStatus from 'http-status';
+import { getCookies } from './helperApi';
+import { redirect } from 'next/navigation';
 type CustomOptions = Omit<RequestInit, 'method'>;
 export const isClient = () => typeof window !== 'undefined';
 export class HttpError extends Error {
@@ -42,6 +44,9 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
       const user = JSON.parse(userStorage);
       baseHeaders.Authorization = `Bearer ${user.accessToken}`;
     }
+  } else {
+    const accessToken = await getCookies('accessToken');
+    baseHeaders.Authorization = `Bearer ${accessToken}`
   }
 
   let body: FormData | string | undefined = undefined;
@@ -62,6 +67,7 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
   })
 
   const payload = await response?.json();
+
   if (!response.ok) {
     if (response.status === httpStatus.UNAUTHORIZED && Array.isArray((payload).errors)) {
       throw new EntityError({
@@ -76,18 +82,15 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
       });
     }
 
-    // if (response.status === httpStatus.UNAUTHORIZED) {
-    //   if (isClient()) {
-    //     localStorage.removeItem('user');
-    //     //handle signOut server
-    //   }
+    if (response.status === httpStatus.UNAUTHORIZED) {
+      if (isClient()) {
 
-
-    // }
+      }
+    }
 
     throw new HttpError({
       statusCode: response.status,
-      message: payload as string
+      message: payload?.errors?.message
     });
   }
 

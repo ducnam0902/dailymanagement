@@ -20,7 +20,6 @@ export async function GET() {
 
   cookieStore.delete('accessToken');
   cookieStore.delete('refreshToken');
-
   return new Response(JSON.stringify({
     ok: true
   }), {
