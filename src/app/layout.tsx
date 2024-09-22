@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import AppProvider from '@/AppProvider'
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
+import LoadingScreen from '@/components/LoadingScreen';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <AppProvider>
           <ToastContainer />
           {children}
+        <LoadingScreen/>
         </AppProvider>
       </body>
     </html>

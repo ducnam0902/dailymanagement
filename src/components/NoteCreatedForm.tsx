@@ -10,6 +10,7 @@ import { INPUT_TYPE } from '@/utils/constants';
 import noteApi from '@/api/note';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation'
+import { useAppContext } from '@/AppProvider';
 
 const options = Object.keys(noteTypeColor);
 
@@ -31,10 +32,12 @@ const NoteForm = () => {
       type: options[0]
     }
   });
+  const { setIsLoading } = useAppContext();
   const router = useRouter();
 
   const handleCreateNote = handleSubmit(async (data) => {
     try {
+      setIsLoading(true);
       const response = await noteApi.createNote(data);
       if (response.ok) {
         toast.success('Created note successfully');
@@ -42,11 +45,13 @@ const NoteForm = () => {
       }
     } catch (error) {
       handleErrorApiResponse(error)
+    } finally {
+      setIsLoading(false)
     }
   });
 
   return (
-    <form onSubmit={handleCreateNote} className="flex items-start py-4 gap-2 md:gap-4">
+    <form onSubmit={handleCreateNote} className="flex items-start p-4 gap-2 md:gap-4 bg-[#C7F0C4]">
       <div className="basis-4/12 sm:basis-8/12">
         <FormField
           name="note"

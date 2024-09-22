@@ -5,11 +5,15 @@ import { UserResType } from './utils/types'
 import { isClient } from './lib/http';
 
 const AppContext = createContext<{
+    isLoading: boolean,
+    setIsLoading: (isLoading: boolean) => void,
     user: UserResType | null,
     setUser: (user: UserResType | null) => void,
       }>({
+        isLoading: false,
         user: null,
-        setUser: () => {}
+        setUser: () => {},
+        setIsLoading: () => {}
       });
 
 export const useAppContext = () => {
@@ -25,6 +29,7 @@ export default function AppProvider({ children }: {children: React.ReactNode}) {
     }
     return null
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const setUser = (user: UserResType | null) => {
     setUserState(user);
@@ -32,7 +37,7 @@ export default function AppProvider({ children }: {children: React.ReactNode}) {
 
   }
 
-  return <AppContext.Provider value={{ user, setUser }}>
+  return <AppContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
     {children}
   </AppContext.Provider>
 }
