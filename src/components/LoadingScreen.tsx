@@ -5,10 +5,10 @@ import React from 'react';
 import logo from '@/assets/logo.png';
 import PuffLoader from 'react-spinners/PuffLoader';
 const LoadingScreen = () => {
-  const { isLoading } = useAppContext();
+  const { state: { isLoading } } = useAppContext();
   if ( isLoading)
     return (
-      <div className='absolute top-0 left-0 z-900 h-screen w-screen bg-white opacity-75 flex justify-center items-center'>
+      <div className='absolute top-0 left-0 z-900 focus:z-900 h-screen w-screen bg-white opacity-75 flex justify-center items-center'>
         <Image src={logo} alt="Daily management Logo" width={100} height={50} priority={true} />
         <PuffLoader
           color="#44ce42"

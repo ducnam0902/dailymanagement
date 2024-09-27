@@ -14,15 +14,3 @@ export async function POST(request: Request) {
     status: 200
   })
 }
-
-export async function GET() {
-  const cookieStore = cookies()
-
-  cookieStore.delete('accessToken');
-  cookieStore.delete('refreshToken');
-  return new Response(JSON.stringify({
-    ok: true
-  }), {
-    status: 200
-  })
-}

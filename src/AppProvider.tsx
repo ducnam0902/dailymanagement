@@ -1,43 +1,30 @@
 'use client'
 
-import { createContext, useContext, useState } from 'react';
-import { UserResType } from './utils/types'
-import { isClient } from './lib/http';
-
+import { createContext, useContext, useReducer, Dispatch } from 'react';
+import { initialState, reducer, ActionContextInterface, InitialStateInterface } from './utils/initialContext';
 const AppContext = createContext<{
-    isLoading: boolean,
-    setIsLoading: (isLoading: boolean) => void,
-    user: UserResType | null,
-    setUser: (user: UserResType | null) => void,
-      }>({
-        isLoading: false,
-        user: null,
-        setUser: () => {},
-        setIsLoading: () => {}
-      });
+      state: InitialStateInterface,
+      dispatch: Dispatch<ActionContextInterface>
+        }>({
+          state: {
+            isLoading: false,
+            user: null
+          },
+          dispatch: ({ type: ActionContextInterface, payload: any }) => {}
+        });
+
+export default function AppProvider({ children }: {children: React.ReactNode}) {
+  const [state, dispatch] = useReducer(reducer, {
+    isLoading: false,
+    user: null
+  }, initialState);
+
+  return <AppContext.Provider value={{ state, dispatch }}>
+    {children}
+  </AppContext.Provider>
+}
 
 export const useAppContext = () => {
   const context = useContext(AppContext);
   return context;
-}
-
-export default function AppProvider({ children }: {children: React.ReactNode}) {
-  const [user, setUserState] = useState(() => {
-    if (isClient()) {
-      const _user = localStorage.getItem('user');
-      return _user ? JSON.parse(_user) : null;
-    }
-    return null
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const setUser = (user: UserResType | null) => {
-    setUserState(user);
-    localStorage.setItem('user', JSON.stringify(user));
-
-  }
-
-  return <AppContext.Provider value={{ user, setUser, isLoading, setIsLoading }}>
-    {children}
-  </AppContext.Provider>
 }

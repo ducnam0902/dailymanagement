@@ -7,8 +7,8 @@ const userApi = {
   createUser: async (data: SignUpType) => await http.post('/user', data),
   signInServer: async (data: UserResType) => await http.post<ResponseStatus>('/api/user', data, undefined, false),
   signIn: async (body: SignInType) => await http.post<UserResType>('/user/login', body),
-  signOut: async () => await http.get<ResponseStatus>('user/logout'),
-  signOutNextServer: async () => await http.get<ResponseStatus>('api/user', undefined, false)
+  signOut: async () => await http.get<ResponseStatus>('/api/user/logout', undefined, false),
+  signOutToServer: async () => await http.get<ResponseStatus>('/user/logout')
 }
 
 export default userApi;
