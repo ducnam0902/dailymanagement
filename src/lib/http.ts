@@ -84,14 +84,24 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
 
     if (response.status === httpStatus.UNAUTHORIZED) {
       if (isClient()) {
-
+        const result = await fetch('/api/user/logout', {
+          headers: {
+            ...baseHeaders
+          }
+        });
+        if (result.ok) {
+          localStorage.removeItem('user');
+          location.href = '/sign-in'
+        }
+      } else {
+        redirect('/sign-out')
       }
+    } else {
+      throw new HttpError({
+        statusCode: response.status,
+        message: payload?.errors?.message
+      });
     }
-
-    throw new HttpError({
-      statusCode: response.status,
-      message: payload?.errors?.message
-    });
   }
 
   return payload as Response;

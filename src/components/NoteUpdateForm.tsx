@@ -12,7 +12,7 @@ import noteApi from '@/api/note';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/AppProvider';
-
+import { ACTION_ENUM } from '@/utils/initialContext';
 type UpdateNoteType = z.infer<typeof UpdateNoteValidationSchema>;
 const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
   const {
@@ -26,10 +26,10 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
     }
   });
   const router = useRouter();
-  const { setIsLoading } =useAppContext();
+  const { dispatch } =useAppContext();
   const handleUpdateNote = handleSubmit(async (data) => {
     try {
-      setIsLoading(true);
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
       if (data.isCompleted) {
         const response: NoteType = await noteApi.markNoteCompleted(id);
         if (response.isCompleted === data.isCompleted) {
@@ -40,7 +40,7 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
     } catch (error) {
       handleErrorApiResponse(error);
     } finally {
-      setIsLoading(false);
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
     }
   });
 
@@ -69,7 +69,7 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
           </h3>
         </div>
         {isDirty && (
-          <Button className="w-fit" size={'xs'} type="submit" color="success">
+          <Button className="w-fit focus:z-1" size={'xs'} type="submit" color="success">
             Update note
           </Button>
         )}

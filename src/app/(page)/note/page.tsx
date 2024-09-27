@@ -15,7 +15,7 @@ type NotTypeList = {
 };
 const NotePage = async () => {
   const response: NoteType[] = await noteApi.getNoteByDate(today);
-  const noteList = response.reduce(
+  const noteList = response?.reduce(
     (previousValue: NotTypeList, currentValue: NoteType) => {
       if (Object.keys(previousValue).includes(currentValue.type)) {
         const currentList = previousValue[currentValue.type];

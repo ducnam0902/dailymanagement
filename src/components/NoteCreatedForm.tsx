@@ -11,7 +11,7 @@ import noteApi from '@/api/note';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation'
 import { useAppContext } from '@/AppProvider';
-
+import { ACTION_ENUM } from '@/utils/initialContext';
 const options = Object.keys(noteTypeColor);
 
 const NoteValidationSchema = z.object({
@@ -32,21 +32,21 @@ const NoteForm = () => {
       type: options[0]
     }
   });
-  const { setIsLoading } = useAppContext();
+  const { dispatch } = useAppContext();
   const router = useRouter();
 
   const handleCreateNote = handleSubmit(async (data) => {
     try {
-      setIsLoading(true);
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
       const response = await noteApi.createNote(data);
       if (response.ok) {
         toast.success('Created note successfully');
-        router.refresh();
       }
     } catch (error) {
       handleErrorApiResponse(error)
     } finally {
-      setIsLoading(false)
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
+      router.refresh();
     }
   });
 
@@ -58,7 +58,6 @@ const NoteForm = () => {
           control={control}
           error={errors.note}
           className='w-full'
-
         />
       </div>
       <div className="basis-6/12 sm:basis-3/12">
@@ -72,7 +71,7 @@ const NoteForm = () => {
         />
       </div>
       <div className='basis-2/12 sm:basis-1/12'>
-        <Button type="submit" color="success" className='w-full'>
+        <Button type="submit" color="success" className='w-full focus:z-1'>
           Create
         </Button>
       </div>

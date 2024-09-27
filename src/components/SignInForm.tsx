@@ -10,6 +10,7 @@ import { handleErrorApiResponse } from '@/utils/helper';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/AppProvider';
 import { toast } from 'react-toastify';
+import { ACTION_ENUM } from '@/utils/initialContext';
 
 
 const SignInForm = () => {
@@ -23,20 +24,25 @@ const SignInForm = () => {
   });
 
   const router = useRouter();
-  const { setUser } = useAppContext();
+  const { dispatch } = useAppContext();
 
   const onSubmit = handleSubmit(async (data) => {
+    dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
     try {
       const response = await userApi.signIn(data);
       const result = await userApi.signInServer(response);
       if (result.ok) {
-        setUser(response);
+        dispatch({ type:  ACTION_ENUM.SET_USER, payload: response })
+        localStorage.setItem('user', JSON.stringify(response));
         toast.success('Sign in successfully')
         router.push('/');
         router.refresh();
       }
     } catch (error) {
       handleErrorApiResponse(error, setError);
+    } finally {
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
+
     }
 
   });
@@ -57,7 +63,7 @@ const SignInForm = () => {
         control={control}
         error={errors.password}
       />
-      <Button className='mt-6 w-full' type="submit" isProcessing={isSubmitting}>Sign In</Button>
+      <Button className='mt-6 w-full focus:z-1' type="submit" isProcessing={isSubmitting}>Sign In</Button>
     </form>
   )
 }

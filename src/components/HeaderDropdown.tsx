@@ -7,21 +7,25 @@ import { handleErrorApiResponse } from '@/utils/helper';
 import userApi from '@/api/user';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { ACTION_ENUM } from '@/utils/initialContext';
 
 const HeaderDropdown = () => {
-  const { user } = useAppContext();
+  const { state: { user }, dispatch } = useAppContext();
   const router = useRouter();
   const handleSignOut = async () => {
+    dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
     try {
       const response = await userApi.signOut();
       if (response.ok) {
-        await userApi.signOutNextServer();
+        localStorage.removeItem('user');
+        toast.success('Sign out successfully');
+        router.push('/sign-in');
       }
-      localStorage.removeItem('user');
-      toast.success('Sign out successfully');
-      router.push('/sign-in');
+
     } catch (error) {
       handleErrorApiResponse(error);
+    } finally {
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
     }
   }
   if (user)
