@@ -13,10 +13,11 @@ import { handleErrorApiResponse } from '@/utils/helper';
 import { INPUT_TYPE } from '@/utils/constants';
 import { SignUpType, signUpValidationSchema } from '@/utils/formType';
 import { toast } from 'react-toastify';
-
-
+import { useAppContext } from '@/AppProvider';
+import { ACTION_ENUM } from '@/utils/initialContext';
 const SignUpForm: React.FC = () => {
   const router = useRouter();
+  const { dispatch } = useAppContext();
   const [file, setFile] = useState<File | null>(null);
   const {
     control,
@@ -52,6 +53,7 @@ const SignUpForm: React.FC = () => {
       const data = await userApi.uploadImage(body);
       result = data.filePath;
     } catch (error) {
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
       handleErrorApiResponse(error, setError);
     }
     return result;
@@ -64,12 +66,15 @@ const SignUpForm: React.FC = () => {
       router.push('/sign-in');
     } catch (error) {
       handleErrorApiResponse(error, setError);
+    } finally {
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
     }
   }
 
   const onSubmit = handleSubmit( async (data) => {
     const validImage = isValidImage(file);
     if (validImage) {
+      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
       const resultImage: string = await uploadAvatarImage(file as File);
       const payload = {
         ...data,
@@ -136,7 +141,7 @@ const SignUpForm: React.FC = () => {
           }}
         />
       </div>
-      <Button type="submit" isProcessing={isSubmitting}>Sign Up</Button>
+      <Button type="submit" className='focus:z-1' isProcessing={isSubmitting}>Sign Up</Button>
     </form>
   );
 };
