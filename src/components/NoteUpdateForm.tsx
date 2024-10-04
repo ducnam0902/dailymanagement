@@ -18,7 +18,7 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isDirty }
+    formState: { errors, isDirty, isSubmitSuccessful }
   } = useForm<UpdateNoteType>({
     resolver: zodResolver(UpdateNoteValidationSchema),
     defaultValues: {
@@ -68,7 +68,7 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
             {note}
           </h3>
         </div>
-        {isDirty && (
+        {(isDirty && !isSubmitSuccessful) && (
           <Button className="w-fit focus:z-1" size={'xs'} type="submit" color="success">
             Update note
           </Button>

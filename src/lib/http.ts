@@ -99,7 +99,7 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
     } else {
       throw new HttpError({
         statusCode: response.status,
-        message: payload?.errors?.message
+        message: payload?.message
       });
     }
   }
