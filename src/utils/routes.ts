@@ -4,7 +4,7 @@ const routes = {
   signIn: '/sign-in',
   note: '/note',
   routines: '/routines',
-  expenses: '/expenses'
+  expenses: '/expenses',
 }
 
 export default routes;

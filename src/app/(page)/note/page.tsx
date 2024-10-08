@@ -30,6 +30,7 @@ const NotePage = async () => {
     },
     {}
   );
+
   return (
     <>
       <h1 className={classNames(dancingScript.className, 'text-4xl my-4 text-center italic')}>Sticky Note</h1>
