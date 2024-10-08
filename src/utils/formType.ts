@@ -44,7 +44,8 @@ export type NoteType = {
   id: number,
   note: string,
   isCompleted: boolean,
-  date: string,
+  createdAt: string,
+  updatedAt: string,
   type: string
 }
 
@@ -53,3 +54,8 @@ export type CreateNoteDto = Pick<NoteType, 'note' | 'type'>
 export const UpdateNoteValidationSchema = z.object({
   isCompleted: z.boolean()
 })
+
+export type CurrentWeekType = {
+  startDate: string;
+  endDate: string;
+}

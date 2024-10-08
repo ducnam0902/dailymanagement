@@ -42,7 +42,6 @@ const SignInForm = () => {
       handleErrorApiResponse(error, setError);
     } finally {
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
-
     }
 
   });

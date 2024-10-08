@@ -7,7 +7,8 @@ import {
   FcSurvey,
   FcCheckmark,
   FcMoneyTransfer,
-  FcComboChart
+  FcComboChart,
+  FcStatistics
 } from 'react-icons/fc';
 import cn from 'classnames';
 type SideBarType = {
