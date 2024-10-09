@@ -9,9 +9,9 @@ import {
 } from '@fullcalendar/core/index.js';
 import noteApi from '@/api/note';
 import { FcCheckmark, FcCancel } from "react-icons/fc";
-import { handleErrorApiResponse } from '@/utils/helper';
+import { formatDate, handleErrorApiResponse } from '@/utils/helper';
 import classNames from 'classnames';
-
+import moment from 'moment';
 function renderEventContent(eventInfo: EventContentArg) {
   const { event } = eventInfo;
   return (
@@ -33,12 +33,12 @@ const NoteCalendar = () => {
   ) => {
     try {
       const response = await noteApi.getNoteByWeek({
-        startDate: inforDate.startStr,
-        endDate: inforDate.endStr
+        startDate: formatDate(moment(inforDate.start)),
+        endDate: formatDate(moment(inforDate.end))
       })
       const data: EventSourceInput = response?.map((item) => ({
         title: item.note,
-        date: item.createdAt,
+        date: item.dateCreated,
         isCompleted: item.isCompleted,
         type: item.type
       }));
@@ -66,6 +66,7 @@ const NoteCalendar = () => {
         contentHeight={'auto'}
         dayHeaderFormat={{ weekday: 'long' }}
         events={handleFetchData}
+        eventColor='transparent'
       />
     </main>
   );

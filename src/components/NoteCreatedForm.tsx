@@ -20,7 +20,12 @@ const NoteValidationSchema = z.object({
 });
 
 type NoteType = z.infer<typeof NoteValidationSchema>;
-const NoteForm = () => {
+
+type NoteFormType = {
+  dateCreated: string
+}
+
+const NoteForm = ({ dateCreated }: NoteFormType) => {
   const {
     control,
     handleSubmit,
@@ -38,7 +43,11 @@ const NoteForm = () => {
   const handleCreateNote = handleSubmit(async (data) => {
     try {
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
-      const response = await noteApi.createNote(data);
+      const payload = {
+        ...data,
+        dateCreated
+      }
+      const response = await noteApi.createNote(payload);
       if (response.ok) {
         toast.success('Created note successfully');
       }

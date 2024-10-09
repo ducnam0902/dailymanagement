@@ -22,8 +22,6 @@
     border-left: 1px solid #000;
 }
 
-
-
 .noteCalendar thead .fc-scrollgrid-sync-inner {
     background-color: #a8d08d;
     font-weight: 400;
@@ -36,10 +34,4 @@
 .noteCalendar .fc-theme-standard td, .fc-theme-standard th {
     border-right: 1px solid #000;
     border-bottom: 1px solid #000;
-}
-
-.noteCalendar .fc-event-selected, .fc-event:focus, 
-.noteCalendar .fc-event-selected, .fc-event:hover {
-    box-shadow: none;
-    background: transparent;
 }

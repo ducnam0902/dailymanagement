@@ -5,10 +5,9 @@ import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
 import {
   FcSurvey,
-  FcCheckmark,
   FcMoneyTransfer,
   FcComboChart,
-  FcStatistics
+  FcTodoList,
 } from 'react-icons/fc';
 import cn from 'classnames';
 type SideBarType = {
@@ -29,10 +28,10 @@ export function SideBar({ isMobile = false, onCloseDrawMobile = () => {} }: Side
             Dashboard
           </Sidebar.Item>
 
-          <Sidebar.Item href={routes.note} icon={FcSurvey} as={Link} onClick={onCloseDrawMobile}>
+          <Sidebar.Item href={routes.note} icon={FcTodoList} as={Link} onClick={onCloseDrawMobile}>
             Daily note
           </Sidebar.Item>
-          <Sidebar.Item href={routes.routines} icon={FcCheckmark} as={Link} onClick={onCloseDrawMobile}>
+          <Sidebar.Item href={routes.routines} icon={FcSurvey} as={Link} onClick={onCloseDrawMobile}>
             Daily routines
           </Sidebar.Item>
 
