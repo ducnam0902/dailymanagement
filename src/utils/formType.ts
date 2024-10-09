@@ -46,6 +46,7 @@ export type NoteType = {
   isCompleted: boolean,
   createdAt: string,
   updatedAt: string,
+  dateCreated: string,
   type: string
 }
 

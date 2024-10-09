@@ -2,6 +2,7 @@ import { EntityError, HttpError } from '@/lib/http';
 import { UseFormSetError } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { SignUpType } from './formType';
+import moment from 'moment';
 type allType = 'uppercase' | 'lowercase' | 'number' | 'specialCharacter';
 
 export const containsAtLeastCharacter = (
@@ -55,3 +56,7 @@ export const noteTypeColor: {
   Shopping: 'purple',
   Other: 'dark'
 };
+
+export const formatDate =  (date: moment.Moment, formatType: string = 'YYYY-MM-DD'): string => {
+  return date.format(formatType);
+}
