@@ -14,7 +14,11 @@ import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
 type UpdateNoteType = z.infer<typeof UpdateNoteValidationSchema>;
-const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
+
+type NoteUpdateFromType = NoteType & {
+  onClose: () => void
+}
+const NoteUpdateForm = ({ id, note, isCompleted, onClose }: NoteUpdateFromType) => {
   const {
     control,
     handleSubmit,
@@ -34,7 +38,7 @@ const NoteUpdateForm = ({ id, note, isCompleted }: NoteType) => {
         const response: NoteType = await noteApi.markNoteCompleted(id);
         if (response.isCompleted === data.isCompleted) {
           toast.success('Mark note completed sucess!')
-          router.refresh();
+          onClose()
         }
       }
     } catch (error) {

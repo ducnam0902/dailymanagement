@@ -50,6 +50,11 @@ const StickyNote = () => {
     }
   };
 
+  const handleRefreshNoteApi= async () => {
+    setIsAddNote(false);
+    await handleFetchDailyNote();
+  }
+
   useEffect(() => {
     handleFetchDailyNote();
   }, []);
@@ -70,7 +75,7 @@ const StickyNote = () => {
           Create
         </Button>
       </div>
-      {isAddNote && <NoteCreateForm dateCreated={formatDate(dateSearch)}/>}
+      {isAddNote && <NoteCreateForm dateCreated={formatDate(dateSearch)} onClose={handleRefreshNoteApi}/>}
 
       <div className="bg-[#C7F0C4] px-4">
         {Object.keys(noteData)?.map((sectionTitle) => {
@@ -80,7 +85,7 @@ const StickyNote = () => {
                 {sectionTitle}
               </Badge>
               {noteData[sectionTitle].map((item) => (
-                <NoteUpdateForm key={item.id} {...item} />
+                <NoteUpdateForm key={item.id} {...item} onClose={handleRefreshNoteApi} />
               ))}
             </section>
           );
