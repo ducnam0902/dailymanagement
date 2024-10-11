@@ -9,9 +9,9 @@ import { handleErrorApiResponse, noteTypeColor } from '@/utils/helper';
 import { INPUT_TYPE } from '@/utils/constants';
 import noteApi from '@/api/note';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation'
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
+import upperFirst from 'lodash/upperFirst';
 const options = Object.keys(noteTypeColor);
 
 const NoteValidationSchema = z.object({
@@ -23,9 +23,10 @@ type NoteType = z.infer<typeof NoteValidationSchema>;
 
 type NoteFormType = {
   dateCreated: string
+  onClose: () => void
 }
 
-const NoteForm = ({ dateCreated }: NoteFormType) => {
+const NoteForm = ({ dateCreated, onClose }: NoteFormType) => {
   const {
     control,
     handleSubmit,
@@ -38,14 +39,14 @@ const NoteForm = ({ dateCreated }: NoteFormType) => {
     }
   });
   const { dispatch } = useAppContext();
-  const router = useRouter();
 
   const handleCreateNote = handleSubmit(async (data) => {
     try {
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
       const payload = {
-        ...data,
-        dateCreated
+        type: data.type,
+        dateCreated,
+        note: upperFirst(data.note),
       }
       const response = await noteApi.createNote(payload);
       if (response.ok) {
@@ -55,7 +56,7 @@ const NoteForm = ({ dateCreated }: NoteFormType) => {
       handleErrorApiResponse(error)
     } finally {
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
-      router.refresh();
+      onClose();
     }
   });
 

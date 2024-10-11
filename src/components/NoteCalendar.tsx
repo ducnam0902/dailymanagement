@@ -15,13 +15,13 @@ import moment from 'moment';
 function renderEventContent(eventInfo: EventContentArg) {
   const { event } = eventInfo;
   return (
-    <section className={'mx-2 my-1 flex gap-2 items-center flex-wrap'}>
-      {event.extendedProps.isCompleted ? <FcCheckmark/> : <FcCancel/>}
-      <p className={classNames('text-md', {
+    <p className={'mx-2 my-1'}>
+      {event.extendedProps.isCompleted ? <FcCheckmark className='inline-block mr-2'/> : <FcCancel className='inline-block mr-2'/>}
+      <span className={classNames('text-md whitespace-normal', {
         'text-red-500': !event.extendedProps.isCompleted,
         'text-green-500': event.extendedProps.isCompleted,
-      })}>{event.title}</p>
-    </section>
+      })}>{event.title}</span>
+    </p>
   );
 }
 
@@ -35,7 +35,7 @@ const NoteCalendar = () => {
       const response = await noteApi.getNoteByWeek({
         startDate: formatDate(moment(inforDate.start)),
         endDate: formatDate(moment(inforDate.end))
-      })
+      });
       const data: EventSourceInput = response?.map((item) => ({
         title: item.note,
         date: item.dateCreated,
@@ -67,6 +67,7 @@ const NoteCalendar = () => {
         dayHeaderFormat={{ weekday: 'long' }}
         events={handleFetchData}
         eventColor='transparent'
+        eventOrder={'isCompleted'}
       />
     </main>
   );
