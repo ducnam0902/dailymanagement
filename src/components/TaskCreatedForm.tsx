@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from 'flowbite-react';
-import { handleErrorApiResponse, noteTypeColor } from '@/utils/helper';
+import { handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
 import { INPUT_TYPE } from '@/utils/constants';
-import noteApi from '@/api/note';
+import taskApi from '@/api/tasks';
 import { toast } from 'react-toastify';
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
 import upperFirst from 'lodash/upperFirst';
-const options = Object.keys(noteTypeColor);
+const options = Object.keys(TaskTypeColor);
 
 const NoteValidationSchema = z.object({
   note: z.string({ message: 'Note is required' }),
@@ -46,9 +46,9 @@ const NoteForm = ({ dateCreated, onClose }: NoteFormType) => {
       const payload = {
         type: data.type,
         dateCreated,
-        note: upperFirst(data.note),
+        note: upperFirst(data.note)
       }
-      const response = await noteApi.createNote(payload);
+      const response = await taskApi.createTask(payload);
       if (response.ok) {
         toast.success('Created note successfully');
       }

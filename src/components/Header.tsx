@@ -7,14 +7,14 @@ import dynamic from 'next/dynamic';
 import routes from '@/utils/routes';
 import SidebarMobile from './SidebarMobile';
 
-const HeaderDropdown = dynamic(() => import('./HeaderDropdown'), { ssr: false})
+const HeaderDropdown = dynamic(() => import('./HeaderDropdown'), { ssr: false })
 
 const Header = () => {
   return (
     <>
       <Navbar rounded className='my-1'>
         <NavbarBrand as={Link} href={routes.home}>
-          <Image src={logo} className="mr-3" alt="Daily management Logo" width={100} height={50} priority={true} />
+          <Image src={logo} className="mr-3 w-[100px]" alt="Daily management Logo" width={0} height={0} priority={true} />
         </NavbarBrand>
         <div className='flex'>
           <HeaderDropdown/>

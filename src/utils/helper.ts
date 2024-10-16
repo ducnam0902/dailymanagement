@@ -46,7 +46,7 @@ export const handleErrorApiResponse = (
   }
 };
 
-export const noteTypeColor: {
+export const TaskTypeColor: {
   [key: string]: string;
 } = {
   Activities: 'info',
@@ -57,6 +57,6 @@ export const noteTypeColor: {
   Other: 'dark'
 };
 
-export const formatDate =  (date: moment.Moment, formatType: string = 'YYYY-MM-DD'): string => {
+export const formatDate = (date: moment.Moment, formatType: string = 'YYYY-MM-DD'): string => {
   return date.format(formatType);
 }

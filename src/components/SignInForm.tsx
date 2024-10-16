@@ -11,18 +11,17 @@ import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/AppProvider';
 import { toast } from 'react-toastify';
 import { ACTION_ENUM } from '@/utils/initialContext';
-
+import { HiMail, HiOutlineLockClosed } from 'react-icons/hi';
 
 const SignInForm = () => {
   const {
     control,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting }
+    formState: { errors }
   } = useForm<SignInType>({
     resolver: zodResolver(signInValidationSchema)
   });
-
   const router = useRouter();
   const { dispatch } = useAppContext();
 
@@ -54,15 +53,17 @@ const SignInForm = () => {
         name="email"
         control={control}
         error={errors.email}
+        icon={HiMail}
       />
       <FormField
         label="Password"
-        type="password"
+        type={'password'}
         name="password"
         control={control}
         error={errors.password}
+        icon={HiOutlineLockClosed}
       />
-      <Button className='mt-6 w-full focus:z-1' type="submit" isProcessing={isSubmitting}>Sign In</Button>
+      <Button className='mt-6 w-full focus:z-1' type="submit" color={'success'}>Sign In</Button>
     </form>
   )
 }

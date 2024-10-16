@@ -4,31 +4,31 @@ import moment from 'moment';
 import { Button, Badge } from 'flowbite-react';
 import { Sansita_Swashed } from 'next/font/google';
 
-import NoteUpdateForm from '@/components/NoteUpdateForm';
-import NoteCreateForm from './NoteCreatedForm';
-import noteApi from '@/api/note';
-import { NoteType } from '@/utils/formType';
-import { formatDate, handleErrorApiResponse, noteTypeColor } from '@/utils/helper';
+import TaskUpdateForm from '@/components/TaskUpdateForm';
+import TaskCreatedForm from './TaskCreatedForm';
+import tasksApi from '@/api/tasks';
+import { TaskType } from '@/utils/formType';
+import { formatDate, handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
 
-type NoteResponseData = {
-  [key: keyof typeof noteTypeColor]: NoteType[];
+type TaskResponseData = {
+  [key: keyof typeof TaskTypeColor]: TaskType[];
 };
 
 const sansitaSwashed = Sansita_Swashed({ subsets: ['latin'] });
 
-const StickyNote = () => {
+const TasksList = () => {
   const { dispatch } = useAppContext();
-  const [isAddNote, setIsAddNote] = useState(false);
+  const [isAddTask, setIsAddTask] = useState(false);
   const [dateSearch, setDateSearch] = useState(moment(new Date()));
-  const [noteData, setNoteData] = useState<NoteResponseData>({});
-  const handleFetchDailyNote = async () => {
+  const [taskData, setTaskData] = useState<TaskResponseData>({});
+  const handleFetchDailyTask = async () => {
     try {
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
-      const response: NoteType[] = await noteApi.getNoteByDate(formatDate(dateSearch));
-      const noteList = response?.reduce(
-        (previousValue: NoteResponseData, currentValue: NoteType) => {
+      const response: TaskType[] = await tasksApi.getTaskByDate(formatDate(dateSearch));
+      const taskList = response?.reduce(
+        (previousValue: TaskResponseData, currentValue: TaskType) => {
           if (Object.keys(previousValue).includes(currentValue.type)) {
             const currentList = previousValue[currentValue.type];
             return {
@@ -42,7 +42,7 @@ const StickyNote = () => {
         },
         {}
       );
-      setNoteData(noteList);
+      setTaskData(taskList);
     } catch (error) {
       handleErrorApiResponse(error);
     } finally {
@@ -50,13 +50,13 @@ const StickyNote = () => {
     }
   };
 
-  const handleRefreshNoteApi= async () => {
-    setIsAddNote(false);
-    await handleFetchDailyNote();
+  const handleRefreshTaskApi= async () => {
+    setIsAddTask(false);
+    await handleFetchDailyTask();
   }
 
   useEffect(() => {
-    handleFetchDailyNote();
+    handleFetchDailyTask();
   }, []);
 
 
@@ -70,22 +70,22 @@ const StickyNote = () => {
           outline
           color="success"
           size={'xs'}
-          onClick={() => setIsAddNote(true)}
+          onClick={() => setIsAddTask(true)}
         >
           Create
         </Button>
       </div>
-      {isAddNote && <NoteCreateForm dateCreated={formatDate(dateSearch)} onClose={handleRefreshNoteApi}/>}
+      {isAddTask && <TaskCreatedForm dateCreated={formatDate(dateSearch)} onClose={handleRefreshTaskApi}/>}
 
       <div className="bg-[#C7F0C4] px-4">
-        {Object.keys(noteData)?.map((sectionTitle) => {
+        {Object.keys(taskData)?.map((sectionTitle) => {
           return (
             <section className='pt-4' key={sectionTitle}>
-              <Badge color={noteTypeColor[sectionTitle]} className="w-fit py-2">
+              <Badge color={TaskTypeColor[sectionTitle]} className="w-fit py-2">
                 {sectionTitle}
               </Badge>
-              {noteData[sectionTitle].map((item) => (
-                <NoteUpdateForm key={item.id} {...item} onClose={handleRefreshNoteApi} />
+              {taskData[sectionTitle].map((item) => (
+                <TaskUpdateForm key={item.id} {...item} onClose={handleRefreshTaskApi} />
               ))}
             </section>
           );
@@ -95,4 +95,4 @@ const StickyNote = () => {
   );
 };
 
-export default StickyNote;
+export default TasksList;

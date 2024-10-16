@@ -9,7 +9,7 @@ const LoadingScreen = () => {
   if ( isLoading)
     return (
       <div className='absolute top-0 left-0 z-900 focus:z-900 h-screen w-screen bg-white opacity-75 flex justify-center items-center'>
-        <Image src={logo} alt="Daily management Logo" width={100} height={50} priority={true} />
+        <Image src={logo} alt="Daily management Logo" className='w-24' width={0} height={0} priority={true} />
         <PuffLoader
           color="#44ce42"
           loading={isLoading}

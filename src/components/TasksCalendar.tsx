@@ -7,8 +7,8 @@ import {
   EventSourceFuncArg,
   EventSourceInput
 } from '@fullcalendar/core/index.js';
-import noteApi from '@/api/note';
-import { FcCheckmark, FcCancel } from "react-icons/fc";
+import tasksApi from '@/api/tasks';
+import { FcCheckmark, FcCancel } from 'react-icons/fc';
 import { formatDate, handleErrorApiResponse } from '@/utils/helper';
 import classNames from 'classnames';
 import moment from 'moment';
@@ -19,20 +19,20 @@ function renderEventContent(eventInfo: EventContentArg) {
       {event.extendedProps.isCompleted ? <FcCheckmark className='inline-block mr-2'/> : <FcCancel className='inline-block mr-2'/>}
       <span className={classNames('text-md whitespace-normal', {
         'text-red-500': !event.extendedProps.isCompleted,
-        'text-green-500': event.extendedProps.isCompleted,
+        'text-green-500': event.extendedProps.isCompleted
       })}>{event.title}</span>
     </p>
   );
 }
 
-const NoteCalendar = () => {
+const TaskCalendar = () => {
   const handleFetchData = async (
     inforDate: EventSourceFuncArg,
     successCallback: (eventInputs: EventInput[]) => void,
     failureCallback: (error: Error) => void
   ) => {
     try {
-      const response = await noteApi.getNoteByWeek({
+      const response = await tasksApi.getTaskByWeek({
         startDate: formatDate(moment(inforDate.start)),
         endDate: formatDate(moment(inforDate.end))
       });
@@ -44,15 +44,15 @@ const NoteCalendar = () => {
       }));
       successCallback(data);
     } catch (error) {
-      if(error instanceof Error) {
+      if (error instanceof Error) {
         failureCallback(error);
       }
       handleErrorApiResponse(error);
-  }
+    }
   };
 
   return (
-    <main className="m-8 noteCalendar">
+    <main className="m-8 taskCalendar">
       <FullCalendar
         plugins={[dayGridPlugin]}
         initialView="dayGridWeek"
@@ -73,4 +73,4 @@ const NoteCalendar = () => {
   );
 };
 
-export default NoteCalendar;
+export default TaskCalendar;
