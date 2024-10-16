@@ -6,16 +6,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'flowbite-react';
 import classNames from 'classnames';
 import * as z from 'zod';
-import { NoteType, UpdateNoteValidationSchema } from '@/utils/formType';
+import { TaskType, UpdateTaskValidationSchema } from '@/utils/formType';
 import { handleErrorApiResponse } from '@/utils/helper';
-import noteApi from '@/api/note';
+import taskApi from '@/api/tasks';
 import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
-type UpdateNoteType = z.infer<typeof UpdateNoteValidationSchema>;
+type UpdateNoteType = z.infer<typeof UpdateTaskValidationSchema>;
 
-type NoteUpdateFromType = NoteType & {
+type NoteUpdateFromType = TaskType & {
   onClose: () => void
 }
 const NoteUpdateForm = ({ id, note, isCompleted, onClose }: NoteUpdateFromType) => {
@@ -24,18 +23,17 @@ const NoteUpdateForm = ({ id, note, isCompleted, onClose }: NoteUpdateFromType) 
     handleSubmit,
     formState: { errors, isDirty, isSubmitSuccessful }
   } = useForm<UpdateNoteType>({
-    resolver: zodResolver(UpdateNoteValidationSchema),
+    resolver: zodResolver(UpdateTaskValidationSchema),
     defaultValues: {
       isCompleted: isCompleted
     }
   });
-  const router = useRouter();
   const { dispatch } =useAppContext();
   const handleUpdateNote = handleSubmit(async (data) => {
     try {
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
       if (data.isCompleted) {
-        const response: NoteType = await noteApi.markNoteCompleted(id);
+        const response: TaskType = await taskApi.markTaskCompleted(id);
         if (response.isCompleted === data.isCompleted) {
           toast.success('Mark note completed sucess!')
           onClose()

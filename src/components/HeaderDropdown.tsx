@@ -35,7 +35,7 @@ const HeaderDropdown = () => {
         inline
         label={
           user?.image ?
-            <Image className='rounded-full h-10 object-cover' loading='lazy' src={user.image} alt='Default Avatar' width={40} height={40}/> : ''
+            <Image className='rounded-full h-10 object-cover w-10' loading='lazy' src={user.image} alt='Default Avatar' width={0} height={0}/> : ''
         }
       >
         <DropdownHeader>

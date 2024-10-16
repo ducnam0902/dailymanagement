@@ -24,7 +24,7 @@ const SignUpForm: React.FC = () => {
     setValue,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting }
+    formState: { errors }
   } = useForm<SignUpType>({
     resolver: zodResolver(signUpValidationSchema)
   });
@@ -85,7 +85,7 @@ const SignUpForm: React.FC = () => {
     }
   });
   return (
-    <form className="flex max-w-md flex-col gap-4" onSubmit={onSubmit}>
+    <form className="flex max-w-lg flex-col gap-4" onSubmit={onSubmit}>
       <div className="md:flex gap-4 ">
         <div className="md:basis-1/2">
           <FormField
@@ -125,7 +125,7 @@ const SignUpForm: React.FC = () => {
         control={control}
         error={errors.confirmPassword}
       />
-      <div id="image" className="max-w-md">
+      <div id="image" >
         <FormField
           kindOfInput={INPUT_TYPE.FILE}
           label="Upload image"
@@ -141,7 +141,7 @@ const SignUpForm: React.FC = () => {
           }}
         />
       </div>
-      <Button type="submit" className='focus:z-1' isProcessing={isSubmitting}>Sign Up</Button>
+      <Button type="submit" className='focus:z-1' color={'success'}>Sign Up</Button>
     </form>
   );
 };

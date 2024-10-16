@@ -7,7 +7,7 @@ import {
   FcSurvey,
   FcMoneyTransfer,
   FcComboChart,
-  FcTodoList,
+  FcTodoList
 } from 'react-icons/fc';
 import cn from 'classnames';
 type SideBarType = {
@@ -28,15 +28,15 @@ export function SideBar({ isMobile = false, onCloseDrawMobile = () => {} }: Side
             Dashboard
           </Sidebar.Item>
 
-          <Sidebar.Item href={routes.note} icon={FcTodoList} as={Link} onClick={onCloseDrawMobile}>
-            Daily note
+          <Sidebar.Item href={routes.task} icon={FcTodoList} as={Link} onClick={onCloseDrawMobile}>
+            Tasks
           </Sidebar.Item>
           <Sidebar.Item href={routes.routines} icon={FcSurvey} as={Link} onClick={onCloseDrawMobile}>
-            Daily routines
+            Daily Tasks
           </Sidebar.Item>
 
           <Sidebar.Item href={routes.expenses} icon={FcMoneyTransfer} as={Link} onClick={onCloseDrawMobile}>
-            Daily expenses
+            Expenses
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>

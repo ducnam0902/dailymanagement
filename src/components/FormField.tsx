@@ -37,7 +37,7 @@ function FormField<T extends FieldValues>({
     <div className="mb-2">
       {label && (
         <div className="mb-2 block">
-          <Label htmlFor={name} value={label} className="text-md" />
+          <Label htmlFor={name} value={label} className="text-lg" />
         </div>
       )}
       <Controller

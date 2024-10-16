@@ -13,7 +13,7 @@ type ILoading = {
 const Loading: React.FC<ILoading> = ({ loading, size = 150, ...props }) => {
   return (
     <div className='flex justify-center items-center h-screen'>
-      <Image src={logo} alt="Daily management Logo" width={100} height={50} priority={true} />
+      <Image src={logo} alt="Daily management Logo" className='w-[100px]' width={0} height={0} priority={true} />
       <PuffLoader
         color="#44ce42"
         loading={loading}

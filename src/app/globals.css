@@ -2,27 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-.noteCalendar .fc .fc-button-primary {
+.taskCalendar .fc .fc-button-primary {
     color: #fff;
     background-color:#046c4e;
 }
 
-.noteCalendar .fc .fc-button-primary:hover {
+.taskCalendar .fc .fc-button-primary:hover {
     background-color:#03543f;
 }
 
-.noteCalendar .fc .fc-button-primary:disabled {
+.taskCalendar .fc .fc-button-primary:disabled {
     background-color: #046c4e;
     color: #fff;
     opacity: 0.65;
 }
 
-.noteCalendar .fc .fc-scrollgrid {
+.taskCalendar .fc .fc-scrollgrid {
     border-top: 1px solid #000;
     border-left: 1px solid #000;
 }
 
-.noteCalendar thead .fc-scrollgrid-sync-inner {
+.taskCalendar thead .fc-scrollgrid-sync-inner {
     background-color: #a8d08d;
     font-weight: 400;
     color: #000;
@@ -31,7 +31,7 @@
     border-right-color: #000;
 }
 
-.noteCalendar .fc-theme-standard td, .fc-theme-standard th {
+.taskCalendar .fc-theme-standard td, .fc-theme-standard th {
     border-right: 1px solid #000;
     border-bottom: 1px solid #000;
 }
