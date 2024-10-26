@@ -17,21 +17,10 @@
     opacity: 0.65;
 }
 
-.taskCalendar .fc .fc-scrollgrid {
-    border-top: 1px solid #000;
-    border-left: 1px solid #000;
-}
-
 .taskCalendar thead .fc-scrollgrid-sync-inner {
-    background-color: #a8d08d;
-    font-weight: 400;
-    color: #000;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
-    border-right-color: #000;
-}
-
-.taskCalendar .fc-theme-standard td, .fc-theme-standard th {
-    border-right: 1px solid #000;
-    border-bottom: 1px solid #000;
+    background-color: #3F8853;
+    color: #fff;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-color: #CECECE;
 }

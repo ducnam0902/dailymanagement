@@ -8,19 +8,16 @@ import {
   EventSourceInput
 } from '@fullcalendar/core/index.js';
 import tasksApi from '@/api/tasks';
-import { FcCheckmark, FcCancel } from 'react-icons/fc';
 import { formatDate, handleErrorApiResponse } from '@/utils/helper';
-import classNames from 'classnames';
+
 import moment from 'moment';
+import { Checkbox } from 'flowbite-react';
 function renderEventContent(eventInfo: EventContentArg) {
   const { event } = eventInfo;
   return (
-    <p className={'mx-2 my-1'}>
-      {event.extendedProps.isCompleted ? <FcCheckmark className='inline-block mr-2'/> : <FcCancel className='inline-block mr-2'/>}
-      <span className={classNames('text-md whitespace-normal', {
-        'text-red-500': !event.extendedProps.isCompleted,
-        'text-green-500': event.extendedProps.isCompleted
-      })}>{event.title}</span>
+    <p className={'mx-4 my-2'}>
+      <Checkbox id="remember" disabled checked={event.extendedProps.isCompleted } className='mr-2 rounded-none checked:text-[#3F8853]'/>
+      <span className='text-[0.9rem] whitespace-normal text-black'>{event.title}</span>
     </p>
   );
 }
@@ -59,7 +56,6 @@ const TaskCalendar = () => {
         eventContent={renderEventContent}
         firstDay={1}
         titleFormat={{ year: 'numeric', month: 'long', day: '2-digit' }}
-        dayHeaderClassNames={'bg-green'}
         buttonText={{
           today: 'Today'
         }}
@@ -68,6 +64,13 @@ const TaskCalendar = () => {
         events={handleFetchData}
         eventColor='transparent'
         eventOrder={'isCompleted'}
+        dayHeaderContent={(dateOptions) => {
+          const dateFormat = moment(dateOptions.date).format('DD-MM-YYYY');
+          return <div>
+            <h3 className='font-normal'>{dateOptions.text}</h3>
+            <h4 className='font-medium text-sm'>{dateFormat}</h4>
+          </div>
+        }}
       />
     </main>
   );

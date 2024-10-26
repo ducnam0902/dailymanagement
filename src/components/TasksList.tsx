@@ -1,96 +1,127 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
-import { Button, Badge } from 'flowbite-react';
-import { Sansita_Swashed } from 'next/font/google';
-
-import TaskUpdateForm from '@/components/TaskUpdateForm';
+import { Table, Dropdown, Badge, Button, Checkbox, Modal } from 'flowbite-react';
+import { FcCheckmark, FcCancel } from 'react-icons/fc';
 import TaskCreatedForm from './TaskCreatedForm';
-import tasksApi from '@/api/tasks';
 import { TaskType } from '@/utils/formType';
 import { formatDate, handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
+import tasksApi from '@/api/tasks';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
+import HeadingDancing from './HeadingDancing';
 
-type TaskResponseData = {
-  [key: keyof typeof TaskTypeColor]: TaskType[];
-};
+const dateSearch = moment(new Date);
 
-const sansitaSwashed = Sansita_Swashed({ subsets: ['latin'] });
+interface TaskListInterface {
+  taskData: TaskType[],
+}
 
-const TasksList = () => {
-  const { dispatch } = useAppContext();
+const TasksList = ({ taskData }: TaskListInterface) => {
+
   const [isAddTask, setIsAddTask] = useState(false);
-  const [dateSearch, setDateSearch] = useState(moment(new Date()));
-  const [taskData, setTaskData] = useState<TaskResponseData>({});
-  const handleFetchDailyTask = async () => {
+  const [isConfirmUpdateModal, setIsConfirmUpdateModal] = useState<boolean>(false);
+  const [listCheckedTask, setListCheckedTask] = useState<string[]>([]);
+  const { dispatch } = useAppContext();
+  const router = useRouter();
+  const handleChangesTask = (event: React.ChangeEvent<HTMLInputElement> ) => {
+    if (event.target.checked) {
+      if (!listCheckedTask.includes(event.target.name)) {
+        setListCheckedTask([
+          ...listCheckedTask,
+          event.target.name
+        ])
+      }
+    } else {
+      const newListCheckedTask = listCheckedTask.filter(item => item !== event.target.name);
+      setListCheckedTask(newListCheckedTask);
+    }
+  }
+
+  const handleUpdateTasks = async () => {
     try {
+      setIsConfirmUpdateModal(false);
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
-      const response: TaskType[] = await tasksApi.getTaskByDate(formatDate(dateSearch));
-      const taskList = response?.reduce(
-        (previousValue: TaskResponseData, currentValue: TaskType) => {
-          if (Object.keys(previousValue).includes(currentValue.type)) {
-            const currentList = previousValue[currentValue.type];
-            return {
-              ...previousValue,
-              [currentValue.type]: [...currentList, currentValue]
-            };
-          } else {
-            previousValue[currentValue.type] = [currentValue];
-            return previousValue;
-          }
-        },
-        {}
-      );
-      setTaskData(taskList);
+      const response = await tasksApi.markTasksCompleted(listCheckedTask);
+      if (response.ok) {
+        router.refresh();
+        setListCheckedTask([]);
+        toast.success('Completed tasks successffully');
+      }
     } catch (error) {
       handleErrorApiResponse(error);
     } finally {
       dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
     }
-  };
-
-  const handleRefreshTaskApi= async () => {
-    setIsAddTask(false);
-    await handleFetchDailyTask();
   }
 
-  useEffect(() => {
-    handleFetchDailyTask();
-  }, []);
-
-
   return (
-    <div>
-      <div className=" bg-[#118E02] w-full text-base px-4 py-2 text-white flex justify-between items-center">
-        <h3 className={sansitaSwashed.className}>
-          Date: {formatDate(dateSearch, 'DD MMM YYYY')}
-        </h3>
-        <Button
-          outline
-          color="success"
-          size={'xs'}
-          onClick={() => setIsAddTask(true)}
-        >
-          Create
-        </Button>
+    <div className='mx-8'>
+      <div className="flex flex-col sm:flex-row  sm:items-center sm:justify-between">
+        <HeadingDancing>Daily Tasks</HeadingDancing>
+        <div className='flex justify-between mb-4 sm:my-8 sm:justify-end gap-1 sm:gap-4'>
+          <Button className='focus:z-1' color={'warning'} onClick={() => setIsConfirmUpdateModal(true)} disabled={listCheckedTask.length === 0}>
+            Update tasks
+          </Button>
+          <Dropdown label="Create" color={'success'} dismissOnClick={false}>
+            <Dropdown.Item onClick={() => setIsAddTask(true)}>Create a task</Dropdown.Item>
+            <Dropdown.Item>Create a template</Dropdown.Item>
+          </Dropdown>
+        </div>
       </div>
-      {isAddTask && <TaskCreatedForm dateCreated={formatDate(dateSearch)} onClose={handleRefreshTaskApi}/>}
+      <Table>
+        <Table.Head>
+          <Table.HeadCell className='w-1'></Table.HeadCell>
+          <Table.HeadCell className='hidden md:table-cell md:w-6'>Type</Table.HeadCell>
+          <Table.HeadCell>Task Name</Table.HeadCell>
+          <Table.HeadCell className=''><FcCheckmark className='text-2xl'/></Table.HeadCell>
+        </Table.Head>
+        <Table.Body className="divide-y">
+          {
+            taskData?.map((item: TaskType) => (
+              <Table.Row key={item.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell>
+                  <Checkbox className='rounded-none checked:text-[#3F8853] disabled:opacity-70' defaultChecked={item.isCompleted} id={item.id.toString()} name={item.id.toString()} onChange={handleChangesTask} disabled={item.isCompleted}/>
+                </Table.Cell>
+                <Table.Cell className="hidden md:table-cell md:w-6 whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  <Badge className='p-2 rounded-none w-max' color={TaskTypeColor[item.type]}>  {item.type}</Badge>
+                </Table.Cell>
+                <Table.Cell className='text-xs md:text-md px-1 md:px-4'>{item.note}</Table.Cell>
+                <Table.Cell className='text-center'>{item.isCompleted ? <FcCheckmark className='text-2xl'/> : <FcCancel className='text-2xl'/>}</Table.Cell>
+              </Table.Row>
+            ))
+          }
+        </Table.Body>
+      </Table>
+      {isAddTask && <TaskCreatedForm isOpenModal={isAddTask} dateCreated={formatDate(dateSearch)} onClose={() => setIsAddTask(false)}/>}
+      {isConfirmUpdateModal && <Modal show={isConfirmUpdateModal} onClose={() => setIsConfirmUpdateModal(false)}>
+        <Modal.Header>
+          <h1 className='text-md sm:text-xl'>Confirm completed task?</h1>
+        </Modal.Header>
+        <Modal.Body>
+          <h2 className='text-sm md:text-lg'>Here are some tasks that you selected: </h2>
+          <ul className='ml-4 text-sm md:text-xl'>
+            {
+              listCheckedTask.map(item => (<li key={item} className='my-2'>
+                &#x2022;
+                <span> {taskData.find(taskItem => taskItem.id.toString() === item)?.note}</span>
+              </li>))
+            }
+          </ul>
 
-      <div className="bg-[#C7F0C4] px-4">
-        {Object.keys(taskData)?.map((sectionTitle) => {
-          return (
-            <section className='pt-4' key={sectionTitle}>
-              <Badge color={TaskTypeColor[sectionTitle]} className="w-fit py-2">
-                {sectionTitle}
-              </Badge>
-              {taskData[sectionTitle].map((item) => (
-                <TaskUpdateForm key={item.id} {...item} onClose={handleRefreshTaskApi} />
-              ))}
-            </section>
-          );
-        })}
-      </div>
+          <h3 className='text-sm md:text-lg'>Are you sure you want to complete some tasks?</h3>
+          <div className='mt-4 flex justify-end '>
+            <Button color="gray" className='focus:z-1 mr-4' onClick={() => setIsConfirmUpdateModal(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateTasks} color="success" className='focus:z-1'>
+              Complete
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>}
     </div>
   );
 };

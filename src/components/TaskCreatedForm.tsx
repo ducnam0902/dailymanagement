@@ -1,17 +1,17 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import FormField from './FormField';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Button } from 'flowbite-react';
+import { Button, Modal } from 'flowbite-react';
 import { handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
 import { INPUT_TYPE } from '@/utils/constants';
 import taskApi from '@/api/tasks';
 import { toast } from 'react-toastify';
-import { useAppContext } from '@/AppProvider';
-import { ACTION_ENUM } from '@/utils/initialContext';
 import upperFirst from 'lodash/upperFirst';
+import { useRouter } from 'next/navigation';
+
 const options = Object.keys(TaskTypeColor);
 
 const NoteValidationSchema = z.object({
@@ -21,12 +21,13 @@ const NoteValidationSchema = z.object({
 
 type NoteType = z.infer<typeof NoteValidationSchema>;
 
-type NoteFormType = {
+type TaskCreatedType = {
   dateCreated: string
-  onClose: () => void
+  onClose: () => void,
+  isOpenModal: boolean,
 }
 
-const NoteForm = ({ dateCreated, onClose }: NoteFormType) => {
+const TaskCreatedForm = ({ isOpenModal, dateCreated, onClose }: TaskCreatedType) => {
   const {
     control,
     handleSubmit,
@@ -38,11 +39,12 @@ const NoteForm = ({ dateCreated, onClose }: NoteFormType) => {
       type: options[0]
     }
   });
-  const { dispatch } = useAppContext();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleCreateNote = handleSubmit(async (data) => {
     try {
-      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: true })
+      setIsLoading(true);
       const payload = {
         type: data.type,
         dateCreated,
@@ -50,43 +52,57 @@ const NoteForm = ({ dateCreated, onClose }: NoteFormType) => {
       }
       const response = await taskApi.createTask(payload);
       if (response.ok) {
+        router.refresh();
         toast.success('Created note successfully');
       }
     } catch (error) {
       handleErrorApiResponse(error)
     } finally {
-      dispatch({ type: ACTION_ENUM.SET_LOADING, payload: false })
       onClose();
+      setIsLoading(false);
     }
   });
 
   return (
-    <form onSubmit={handleCreateNote} className="flex items-start p-4 gap-2 md:gap-4 bg-[#C7F0C4]">
-      <div className="basis-4/12 sm:basis-8/12">
-        <FormField
-          name="note"
-          control={control}
-          error={errors.note}
-          className='w-full'
-        />
-      </div>
-      <div className="basis-6/12 sm:basis-3/12">
-        <FormField
-          name="type"
-          control={control}
-          error={errors.type}
-          options={options}
-          kindOfInput={INPUT_TYPE.SELECT}
-          className='w-full'
-        />
-      </div>
-      <div className='basis-2/12 sm:basis-1/12'>
-        <Button type="submit" color="success" className='w-full focus:z-1'>
-          Create
-        </Button>
-      </div>
-    </form>
+    <Modal show={isOpenModal} onClose={onClose} popup>
+      <Modal.Header/>
+      <Modal.Body>
+        <h1 className='text-xl lg:text-3xl mb-4'>Create a task</h1>
+        <form onSubmit={handleCreateNote} className="">
+          <div className='mb-8' >
+            <FormField
+              label='Task'
+              placeholder='What do you plan to do?'
+              name="note"
+              control={control}
+              error={errors.note}
+              className='w-full'
+            />
+          </div>
+          <div className='mb-8' >
+            <FormField
+              label='Type'
+              name="type"
+              control={control}
+              error={errors.type}
+              options={options}
+              kindOfInput={INPUT_TYPE.SELECT}
+              className='w-full'
+            />
+          </div>
+          <div className='mt-4 flex justify-end '>
+            <Button color="gray" className='focus:z-1 mr-4' onClick={onClose}>
+              Cancel
+            </Button>
+            <Button isProcessing={isLoading} disabled={isLoading} type="submit" color="success" className='focus:z-1'>
+              Create
+            </Button>
+          </div>
+        </form>
+      </Modal.Body>
+
+    </Modal>
   );
 };
 
-export default NoteForm;
+export default TaskCreatedForm;

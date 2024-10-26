@@ -49,7 +49,7 @@ export const handleErrorApiResponse = (
 export const TaskTypeColor: {
   [key: string]: string;
 } = {
-  Activities: 'info',
+  Activities: 'success',
   Development: 'indigo',
   'New Routine': 'failure',
   Planning: 'warning',
