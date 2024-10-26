@@ -1,7 +1,8 @@
 
 import SideBar from '@/components/SideBar'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, Suspense } from 'react'
 import Header from '@/components/Header'
+import Loading from './loading'
 
 interface IMainLayout {
     children: ReactElement
@@ -14,7 +15,9 @@ const MainLayout: React.FC<IMainLayout> = ({ children }) => {
       <main className='flex h-screen'>
         <SideBar isMobile={false}/>
         <div className='w-full'>
-          {children}
+          <Suspense fallback={<Loading/>}>
+            {children}
+          </Suspense>
         </div>
       </main>
     </>

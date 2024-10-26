@@ -4,7 +4,8 @@ import {
   TextInput,
   TextInputProps,
   FileInput,
-  Select
+  Select,
+  Checkbox
 } from 'flowbite-react';
 import {
   Control,
@@ -21,7 +22,7 @@ interface IFormField<T extends FieldValues> extends TextInputProps {
   label?: string;
   control: Control<T>;
   options?: string[];
-  error: FieldError | undefined;
+  error?: FieldError | undefined;
 }
 
 function FormField<T extends FieldValues>({
@@ -37,7 +38,7 @@ function FormField<T extends FieldValues>({
     <div className="mb-2">
       {label && (
         <div className="mb-2 block">
-          <Label htmlFor={name} value={label} className="text-lg" />
+          <Label htmlFor={name} value={label} className="text-md lg:text-lg" />
         </div>
       )}
       <Controller
@@ -63,6 +64,20 @@ function FormField<T extends FieldValues>({
                   <option key={item?.toString()}>{item}</option>
                 ))}
               </Select>
+            );
+          }
+
+          if (kindOfInput === INPUT_TYPE.CHECKBOX) {
+            const { theme, ...checkboxProps } = props;
+            return (
+              <>
+                <Checkbox id={name}
+                  {...field}
+                  {...checkboxProps}
+                />
+                <Label htmlFor={name}>{label}</Label>
+              </>
+
             );
           }
 

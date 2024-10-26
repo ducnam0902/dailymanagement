@@ -1,13 +1,15 @@
-import HeadingDancing from '@/components/HeadingDancing';
+
+import tasksApi from '@/api/tasks';
 import TasksList from '@/components/TasksList';
+import { formatDate } from '@/utils/helper';
+import moment from 'moment';
 import React from 'react';
 
+
 const TasksPage = async () => {
+  const response = await tasksApi.getTaskByDate(formatDate(moment(new Date)));
   return (
-    <>
-      <HeadingDancing>Daily Tasks</HeadingDancing>
-      <TasksList/>
-    </>
+      <TasksList taskData={response}/>
   );
 }
 
