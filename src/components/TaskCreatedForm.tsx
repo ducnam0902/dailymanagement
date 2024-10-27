@@ -5,38 +5,40 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button, Modal } from 'flowbite-react';
-import { handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
+import { formatDate, handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
 import { INPUT_TYPE } from '@/utils/constants';
 import taskApi from '@/api/tasks';
 import { toast } from 'react-toastify';
 import upperFirst from 'lodash/upperFirst';
 import { useRouter } from 'next/navigation';
+import moment from 'moment';
 
 const options = Object.keys(TaskTypeColor);
 
-const NoteValidationSchema = z.object({
-  note: z.string({ message: 'Note is required' }),
-  type: z.string({ message: 'Type is required' })
+const TaskValidationSchema = z.object({
+  note: z.string({ message: 'Task field is required' }),
+  type: z.string({ message: 'Type is required' }),
+  dateCreated: z.string({ message: 'Date is required' })
 });
 
-type NoteType = z.infer<typeof NoteValidationSchema>;
+type TaskType = z.infer<typeof TaskValidationSchema>;
 
 type TaskCreatedType = {
-  dateCreated: string
   onClose: () => void,
   isOpenModal: boolean,
 }
 
-const TaskCreatedForm = ({ isOpenModal, dateCreated, onClose }: TaskCreatedType) => {
+const TaskCreatedForm = ({ isOpenModal, onClose }: TaskCreatedType) => {
   const {
     control,
     handleSubmit,
     formState: { errors }
-  } = useForm<NoteType>({
-    resolver: zodResolver(NoteValidationSchema),
+  } = useForm<TaskType>({
+    resolver: zodResolver(TaskValidationSchema),
     defaultValues: {
       note: '',
-      type: options[0]
+      type: options[0],
+      dateCreated: formatDate(moment(new Date()), 'DD MMMM YYYY')
     }
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -47,13 +49,13 @@ const TaskCreatedForm = ({ isOpenModal, dateCreated, onClose }: TaskCreatedType)
       setIsLoading(true);
       const payload = {
         type: data.type,
-        dateCreated,
+        dateCreated: formatDate(moment(new Date(data.dateCreated)), 'YYYY-MM-DD'),
         note: upperFirst(data.note)
       }
       const response = await taskApi.createTask(payload);
       if (response.ok) {
         router.refresh();
-        toast.success('Created note successfully');
+        toast.success('Created a task successfully');
       }
     } catch (error) {
       handleErrorApiResponse(error)
@@ -66,10 +68,22 @@ const TaskCreatedForm = ({ isOpenModal, dateCreated, onClose }: TaskCreatedType)
   return (
     <Modal show={isOpenModal} onClose={onClose} popup>
       <Modal.Header/>
-      <Modal.Body>
-        <h1 className='text-xl lg:text-3xl mb-4'>Create a task</h1>
+      <Modal.Body className='!h-80'>
+        <h1 className='text-xl lg:text-3xl font-bold'>Create a task</h1>
+
         <form onSubmit={handleCreateNote} className="">
-          <div className='mb-8' >
+          <div className='my-8' >
+            <FormField
+              label='Date'
+              name="dateCreated"
+              control={control}
+              error={errors.type}
+              options={options}
+              kindOfInput={INPUT_TYPE.DATEPICKER}
+              className='w-full z-auto'
+            />
+          </div>
+          <div className='my-10' >
             <FormField
               label='Task'
               placeholder='What do you plan to do?'
@@ -79,7 +93,8 @@ const TaskCreatedForm = ({ isOpenModal, dateCreated, onClose }: TaskCreatedType)
               className='w-full'
             />
           </div>
-          <div className='mb-8' >
+
+          <div className='my-8' >
             <FormField
               label='Type'
               name="type"
@@ -90,7 +105,7 @@ const TaskCreatedForm = ({ isOpenModal, dateCreated, onClose }: TaskCreatedType)
               className='w-full'
             />
           </div>
-          <div className='mt-4 flex justify-end '>
+          <div className='mt-12 flex justify-end '>
             <Button color="gray" className='focus:z-1 mr-4' onClick={onClose}>
               Cancel
             </Button>
