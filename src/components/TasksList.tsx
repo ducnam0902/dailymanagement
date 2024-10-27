@@ -1,19 +1,16 @@
 'use client';
 import React, { useState } from 'react';
-import moment from 'moment';
 import { Table, Dropdown, Badge, Button, Checkbox, Modal } from 'flowbite-react';
 import { FcCheckmark, FcCancel } from 'react-icons/fc';
 import TaskCreatedForm from './TaskCreatedForm';
 import { TaskType } from '@/utils/formType';
-import { formatDate, handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
+import { handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
 import tasksApi from '@/api/tasks';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
 import HeadingDancing from './HeadingDancing';
-
-const dateSearch = moment(new Date);
 
 interface TaskListInterface {
   taskData: TaskType[],
@@ -62,10 +59,10 @@ const TasksList = ({ taskData }: TaskListInterface) => {
       <div className="flex flex-col sm:flex-row  sm:items-center sm:justify-between">
         <HeadingDancing>Daily Tasks</HeadingDancing>
         <div className='flex justify-between mb-4 sm:my-8 sm:justify-end gap-1 sm:gap-4'>
-          <Button className='focus:z-1' color={'warning'} onClick={() => setIsConfirmUpdateModal(true)} disabled={listCheckedTask.length === 0}>
+          <Button className='focus:z-1' color={'success'} onClick={() => setIsConfirmUpdateModal(true)} disabled={listCheckedTask.length === 0}>
             Update tasks
           </Button>
-          <Dropdown label="Create" color={'success'} dismissOnClick={false}>
+          <Dropdown label="Create" outline color={'success'} dismissOnClick={false}>
             <Dropdown.Item onClick={() => setIsAddTask(true)}>Create a task</Dropdown.Item>
             <Dropdown.Item>Create a template</Dropdown.Item>
           </Dropdown>
@@ -73,10 +70,10 @@ const TasksList = ({ taskData }: TaskListInterface) => {
       </div>
       <Table>
         <Table.Head>
-          <Table.HeadCell className='w-1'></Table.HeadCell>
-          <Table.HeadCell className='hidden md:table-cell md:w-6'>Type</Table.HeadCell>
-          <Table.HeadCell>Task Name</Table.HeadCell>
-          <Table.HeadCell className=''><FcCheckmark className='text-2xl'/></Table.HeadCell>
+          <Table.HeadCell className='w-1 bg-green-100'></Table.HeadCell>
+          <Table.HeadCell className='hidden md:table-cell md:w-6 bg-green-100'>Type</Table.HeadCell>
+          <Table.HeadCell className='bg-green-100'>Task Name</Table.HeadCell>
+          <Table.HeadCell className='bg-green-100'><FcCheckmark className='text-2xl'/></Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {
@@ -95,7 +92,7 @@ const TasksList = ({ taskData }: TaskListInterface) => {
           }
         </Table.Body>
       </Table>
-      {isAddTask && <TaskCreatedForm isOpenModal={isAddTask} dateCreated={formatDate(dateSearch)} onClose={() => setIsAddTask(false)}/>}
+      {isAddTask && <TaskCreatedForm isOpenModal={isAddTask} onClose={() => setIsAddTask(false)}/>}
       {isConfirmUpdateModal && <Modal show={isConfirmUpdateModal} onClose={() => setIsConfirmUpdateModal(false)}>
         <Modal.Header>
           <h1 className='text-md sm:text-xl'>Confirm completed task?</h1>

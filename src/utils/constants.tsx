@@ -10,5 +10,6 @@ export const enum INPUT_TYPE {
   "TEXT",
   "FILE",
   "SELECT",
-  "CHECKBOX"
+  "CHECKBOX",
+  "DATEPICKER"
 }

@@ -5,7 +5,8 @@ import {
   TextInputProps,
   FileInput,
   Select,
-  Checkbox
+  Checkbox,
+  Datepicker
 } from 'flowbite-react';
 import {
   Control,
@@ -15,6 +16,8 @@ import {
   Path
 } from 'react-hook-form';
 import { INPUT_TYPE } from '@/utils/constants';
+import { formatDate } from '@/utils/helper';
+import moment from 'moment';
 
 interface IFormField<T extends FieldValues> extends TextInputProps {
   kindOfInput?: INPUT_TYPE;
@@ -79,6 +82,32 @@ function FormField<T extends FieldValues>({
               </>
 
             );
+          }
+
+          if (kindOfInput === INPUT_TYPE.DATEPICKER) {
+            const { theme, ...datePickerProps } = props;
+            const onChangeDatePicker = (date: Date) => {
+              field.onChange(formatDate(moment(date), 'DD MMMM YYYY'));
+            }
+            return (
+              <Datepicker
+                id={name}
+                minDate={ new Date()}
+                showClearButton={false}
+                showTodayButton={false}
+                weekStart={1}
+                theme={{
+                  popup: {
+                    root: {
+                      inner: 'inline-block rounded-lg bg-white md:p-4 shadow-lg dark:bg-gray-700'
+                    }
+                  }
+                }}
+                {...field}
+                {...datePickerProps}
+                onSelectedDateChanged={onChangeDatePicker}
+              />
+            )
           }
 
           return (
