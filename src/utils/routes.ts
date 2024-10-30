@@ -3,7 +3,7 @@ const routes = {
   signUp: '/sign-up',
   signIn: '/sign-in',
   task: '/tasks',
-  routines: '/routines',
+  routines: (startedDate: string) => `/routines/${startedDate}`,
   expenses: '/expenses'
 }
 

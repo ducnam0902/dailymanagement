@@ -84,7 +84,6 @@ export const request = async <Response> (url: string, method: 'GET' | 'POST' | '
 
     if (response.status === httpStatus.UNAUTHORIZED) {
       if (isClient()) {
-        console.log(baseHeaders);
         const result = await fetch('/api/user/logout', {
           headers: {
             ...baseHeaders

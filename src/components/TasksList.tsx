@@ -103,7 +103,7 @@ const TasksList = ({ taskData }: TaskListInterface) => {
             {
               listCheckedTask.map(item => (<li key={item} className='my-2'>
                 &#x2022;
-                <span> {taskData.find(taskItem => taskItem.id.toString() === item)?.note}</span>
+                <span className='text-xs md:text-lg'> {taskData.find(taskItem => taskItem.id.toString() === item)?.note}</span>
               </li>))
             }
           </ul>

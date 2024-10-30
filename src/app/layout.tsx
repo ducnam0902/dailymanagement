@@ -27,7 +27,7 @@ export default function RootLayout({
         <AppProvider>
           <ToastContainer />
           {children}
-        <LoadingScreen/>
+          <LoadingScreen/>
         </AppProvider>
       </body>
     </html>

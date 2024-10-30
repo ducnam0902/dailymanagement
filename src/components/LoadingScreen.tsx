@@ -6,6 +6,7 @@ import logo from '@/assets/logo.png';
 import PuffLoader from 'react-spinners/PuffLoader';
 const LoadingScreen = () => {
   const { state: { isLoading } } = useAppContext();
+  console.log('loading screen component');
   if (isLoading)
     return (
       <div className='absolute top-0 left-0 z-99999 focus:z-99999 h-screen w-screen bg-white opacity-75 flex justify-center items-center'>
