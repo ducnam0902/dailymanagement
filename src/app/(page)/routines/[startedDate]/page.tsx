@@ -90,7 +90,7 @@ const RoutinesPage = async ({ params }: IRoutinesPage) => {
                 {
                   data[item]?.map(task => (<p key={task.id} className='my-3 w-fit flex justify-center items-center'>
                     <Checkbox id="remember" disabled checked={task.isCompleted } className='mr-2 rounded-none checked:text-[#3F8853]'/>
-                    <span className='whitespace-normal text-black text-xs'>{task.note}</span>
+                    <span className='whitespace-normal text-black text-xs'>{task.task}</span>
                   </p>))
                 }
               </div>)

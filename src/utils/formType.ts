@@ -42,7 +42,7 @@ export type SignInType = z.infer<typeof signInValidationSchema>;
 
 export type TaskType = {
   id: number,
-  note: string,
+  task: string,
   isCompleted: boolean,
   createdAt: string,
   updatedAt: string,
@@ -50,7 +50,7 @@ export type TaskType = {
   type: string
 }
 
-export type CreateTaskDto = Pick<TaskType, 'note' | 'type'>
+export type CreateTaskDto = Pick<TaskType, 'task' | 'type'>
 
 export const UpdateTaskValidationSchema = z.object({
   isCompleted: z.boolean()

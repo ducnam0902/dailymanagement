@@ -16,7 +16,7 @@ import moment from 'moment';
 const options = Object.keys(TaskTypeColor);
 
 const TaskValidationSchema = z.object({
-  note: z.string({ message: 'Task field is required' }),
+  task: z.string({ message: 'Task field is required' }),
   type: z.string({ message: 'Type is required' }),
   dateCreated: z.string({ message: 'Date is required' })
 });
@@ -36,7 +36,7 @@ const TaskCreatedForm = ({ isOpenModal, onClose }: TaskCreatedType) => {
   } = useForm<TaskType>({
     resolver: zodResolver(TaskValidationSchema),
     defaultValues: {
-      note: '',
+      task: '',
       type: options[0],
       dateCreated: formatDate(moment(new Date()), 'DD MMMM YYYY')
     }
@@ -44,13 +44,13 @@ const TaskCreatedForm = ({ isOpenModal, onClose }: TaskCreatedType) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleCreateNote = handleSubmit(async (data) => {
+  const handleCreateTask = handleSubmit(async (data) => {
     try {
       setIsLoading(true);
       const payload = {
         type: data.type,
         dateCreated: formatDate(moment(new Date(data.dateCreated)), 'YYYY-MM-DD'),
-        note: upperFirst(data.note)
+        task: upperFirst(data.task)
       }
       const response = await taskApi.createTask(payload);
       if (response.ok) {
@@ -71,7 +71,7 @@ const TaskCreatedForm = ({ isOpenModal, onClose }: TaskCreatedType) => {
       <Modal.Body className='!h-80'>
         <h1 className='text-xl lg:text-3xl font-bold'>Create a task</h1>
 
-        <form onSubmit={handleCreateNote} className="">
+        <form onSubmit={handleCreateTask} className="">
           <div className='my-8' >
             <FormField
               label='Date'
@@ -87,9 +87,9 @@ const TaskCreatedForm = ({ isOpenModal, onClose }: TaskCreatedType) => {
             <FormField
               label='Task'
               placeholder='What do you plan to do?'
-              name="note"
+              name="task"
               control={control}
-              error={errors.note}
+              error={errors.task}
               className='w-full'
             />
           </div>

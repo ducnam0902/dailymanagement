@@ -85,7 +85,7 @@ const TasksList = ({ taskData }: TaskListInterface) => {
                 <Table.Cell className="hidden md:table-cell md:w-6 whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   <Badge className='p-2 rounded-none w-max' color={TaskTypeColor[item.type]}>  {item.type}</Badge>
                 </Table.Cell>
-                <Table.Cell className='text-xs md:text-md px-1 md:px-4'>{item.note}</Table.Cell>
+                <Table.Cell className='text-xs md:text-md px-1 md:px-4'>{item.task}</Table.Cell>
                 <Table.Cell className='text-center'>{item.isCompleted ? <FcCheckmark className='text-2xl'/> : <FcCancel className='text-2xl'/>}</Table.Cell>
               </Table.Row>
             ))
@@ -103,7 +103,7 @@ const TasksList = ({ taskData }: TaskListInterface) => {
             {
               listCheckedTask.map(item => (<li key={item} className='my-2'>
                 &#x2022;
-                <span className='text-xs md:text-lg'> {taskData.find(taskItem => taskItem.id.toString() === item)?.note}</span>
+                <span className='text-xs md:text-lg'> {taskData.find(taskItem => taskItem.id.toString() === item)?.task}</span>
               </li>))
             }
           </ul>
