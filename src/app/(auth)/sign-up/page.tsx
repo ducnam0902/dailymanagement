@@ -4,6 +4,10 @@ import logo from '@/assets/logo.png';
 import SignUpForm from '@/components/SignUpForm';
 import Link from 'next/link';
 import routes from '@/utils/routes';
+import type { Metadata } from 'next';
+export const metadata: Metadata = {
+  title: 'Sign Up'
+};
 
 const SignUpPage = () => {
   return (
