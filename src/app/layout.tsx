@@ -5,14 +5,30 @@ import AppProvider from '@/AppProvider'
 import 'react-toastify/dist/ReactToastify.css';
 import './globals.css';
 import LoadingScreen from '@/components/LoadingScreen';
+import envConfig from '@/utils/config';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Daily management',
-  description: 'Manage daily task, expenses',
+  title: {
+    template: ' %s | Daily Management',
+    default: 'Daily Management'
+  },
+  description: 'Daily Management helps you managing tasks, expenses and get out of some troubles need to done today',
   icons: {
     icon: '/smallLogo.png'
+  },
+  keywords: ['Daily management', 'Tasks', 'Expenses', 'Daily', 'Manage', 'Management', 'Schedules'],
+  openGraph: {
+    title: 'Daily Management',
+    description: 'Daily Management helps you managing tasks, expenses and get out of some troubles need to done today',
+    siteName: 'Daily management',
+    images: [
+      {
+        url: envConfig.NEXT_PUBLIC_BASE_API + '/logo.png',
+        alt: 'Daily management logo'
+      }
+    ]
   }
 };
 
