@@ -1,26 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-.taskCalendar .fc .fc-button-primary {
-    color: #fff;
-    background-color:#046c4e;
-}
-
-.taskCalendar .fc .fc-button-primary:hover {
-    background-color:#03543f;
-}
-
-.taskCalendar .fc .fc-button-primary:disabled {
-    background-color: #046c4e;
-    color: #fff;
-    opacity: 0.65;
-}
-
-.taskCalendar thead .fc-scrollgrid-sync-inner {
-    background-color: #3F8853;
-    color: #fff;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-color: #CECECE;
-}

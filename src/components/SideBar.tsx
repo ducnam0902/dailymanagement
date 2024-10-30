@@ -10,11 +10,14 @@ import {
   FcTodoList
 } from 'react-icons/fc';
 import cn from 'classnames';
+import moment from 'moment';
 type SideBarType = {
   isMobile: boolean;
   onCloseDrawMobile?: () => void
 };
 export function SideBar({ isMobile = false, onCloseDrawMobile = () => {} }: SideBarType) {
+  const currentMonday = moment().day(1).format('YYYY-MM-DD');
+
   return (
     <Sidebar
       className={cn({
@@ -31,7 +34,7 @@ export function SideBar({ isMobile = false, onCloseDrawMobile = () => {} }: Side
           <Sidebar.Item href={routes.task} icon={FcTodoList} as={Link} onClick={onCloseDrawMobile}>
             Tasks
           </Sidebar.Item>
-          <Sidebar.Item href={routes.routines} icon={FcSurvey} as={Link} onClick={onCloseDrawMobile}>
+          <Sidebar.Item href={routes.routines(currentMonday)} icon={FcSurvey} as={Link} onClick={onCloseDrawMobile}>
             Daily Tasks
           </Sidebar.Item>
 

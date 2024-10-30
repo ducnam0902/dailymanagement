@@ -9,7 +9,7 @@ import React from 'react';
 const TasksPage = async () => {
   const response = await tasksApi.getTaskByDate(formatDate(moment(new Date)));
   return (
-      <TasksList taskData={response}/>
+    <TasksList taskData={response}/>
   );
 }
 
