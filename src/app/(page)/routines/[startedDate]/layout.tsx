@@ -16,8 +16,6 @@ export const metadata: Metadata = {
 const MainLayout: React.FC<IMainLayout> = ({ children }) => {
   return (
     <>
-
-
       <Suspense fallback={<Loading/>}>
         {children}
       </Suspense>

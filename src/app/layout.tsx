@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   description: 'Daily Management helps you managing tasks, expenses and get out of some troubles need to done today',
   icons: {
-    icon: '/smallLogo.png'
+    icon: '/logo.png'
   },
   keywords: ['Daily management', 'Tasks', 'Expenses', 'Daily', 'Manage', 'Management', 'Schedules'],
   openGraph: {

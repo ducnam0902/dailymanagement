@@ -3,17 +3,10 @@ import SideBar from '@/components/SideBar'
 import React, { ReactElement, Suspense } from 'react'
 import Header from '@/components/Header'
 import Loading from './loading'
-
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Dashboard'
-};
-
-
 interface IMainLayout {
     children: ReactElement
 }
+
 
 const MainLayout: React.FC<IMainLayout> = ({ children }) => {
   return (
