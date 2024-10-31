@@ -64,7 +64,11 @@ const TasksList = ({ taskData }: TaskListInterface) => {
           </Button>
           <Dropdown label="Create" outline color={'success'} dismissOnClick={false}>
             <Dropdown.Item onClick={() => setIsAddTask(true)}>Create a task</Dropdown.Item>
-            <Dropdown.Item>Create a template</Dropdown.Item>
+            <Dropdown.Item>
+              <Dropdown label="" dismissOnClick={false} placement='left' renderTrigger={() => <span>Template</span>}>
+                <Dropdown.Item className='w-60'>Create Template</Dropdown.Item>
+              </Dropdown>
+            </Dropdown.Item>
           </Dropdown>
         </div>
       </div>

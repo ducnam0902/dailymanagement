@@ -8,9 +8,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Daily Tasks',
-  description: 'Daily tasks - To define tasks for today and next day'
+  description: 'Daily Tasks - Define what you need to done today'
 };
-
 
 const TasksPage = async () => {
   const response = await tasksApi.getTaskByDate(formatDate(moment(new Date)));
