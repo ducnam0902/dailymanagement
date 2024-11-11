@@ -122,7 +122,7 @@ const http = {
       body
     });
   },
-  delete<Respond>(url: string, options: Omit<CustomOptions, 'body'> | undefined, isServerApi: boolean = true) {
+  delete<Respond>(url: string, options?: Omit<CustomOptions, 'body'> | undefined, isServerApi: boolean = true) {
     return request<Respond>(url, 'DELETE', isServerApi, options);
   }
 }

@@ -60,3 +60,10 @@ export const TaskTypeColor: {
 export const formatDate = (date: moment.Moment, formatType: string = 'YYYY-MM-DD'): string => {
   return date.format(formatType);
 }
+
+export const REPEAT_TYPE = {
+  Daily: 'Daily',
+  Weekly: 'Weekly',
+  Monthly: 'Monthly',
+  Off:'Off'
+}

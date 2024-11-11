@@ -63,7 +63,7 @@ const RoutinesPage = async ({ params }: IRoutinesPage) => {
         </div>
         <div className="m-8 hidden sm:block">
           <div className='flex justify-between items-center'>
-            <HeadingDancing className='text-md '>{formatDate(moment(weekdays.monday), 'DD MMM YYYY')} - {formatDate(moment(weekdays.sunday), 'DD MMM YYYY')}</HeadingDancing>
+            <HeadingDancing className='text-md'>{formatDate(moment(weekdays.monday), 'DD MMM YYYY')} - {formatDate(moment(weekdays.sunday), 'DD MMM YYYY')}</HeadingDancing>
             <CalendarButton startedDate={startedDate}/>
           </div>
           <div className='text-center flex items-center'>
@@ -83,14 +83,14 @@ const RoutinesPage = async ({ params }: IRoutinesPage) => {
           <div className='flex items-stretch' >
             {
               Object.values(weekdays).map(item => <div key={item} className={
-                classNames('border-zinc-300 border-b-2 border-r-2  border-solid w-full md:px-2 lg:px-3 text-xs lg:text-sm', {
+                classNames('border-zinc-300 border-b-2 border-r-2 border-solid w-full md:px-2 lg:px-1 xl:px-2 text-xs lg:text-sm', {
                   'border-l-2': item === weekdays.monday
                 })
               }>
                 {
                   data[item]?.map(task => (<p key={task.id} className='my-3 w-fit flex justify-center items-center'>
-                    <Checkbox id="remember" disabled checked={task.isCompleted } className='mr-2 rounded-none checked:text-[#3F8853]'/>
-                    <span className='whitespace-normal text-black text-xs'>{task.task}</span>
+                    <Checkbox id="remember" disabled checked={task.isCompleted } className='mr-1 xl:mr-2 rounded-none checked:text-[#3F8853]'/>
+                    <span className='whitespace-normal text-black text-[10px] lg:text-xs'>{task.task}</span>
                   </p>))
                 }
               </div>)

@@ -13,3 +13,4 @@ export const enum INPUT_TYPE {
   "CHECKBOX",
   "DATEPICKER"
 }
+
