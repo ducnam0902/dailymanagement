@@ -9,7 +9,7 @@ import { INPUT_TYPE } from '@/utils/constants';
 import upperFirst from 'lodash/upperFirst';
 import moment from 'moment';
 import RepeatTypeForm from './RepeatTypeForm';
-import { ScheduleForm, TemplateCreatedFormValidationType } from '@/utils/formType';
+import { ScheduleForm, ScheduleType, TemplateCreatedFormValidationType } from '@/utils/formType';
 import scheduleApi from '@/api/schedule';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -18,17 +18,19 @@ const options = Object.keys(TaskTypeColor);
 type TemplateCreatedFormType = {
   onClose: () => void,
   isOpenModal: boolean,
+  schedule?: ScheduleType | undefined,
 }
 
-const TemplateCreatedForm = ({ isOpenModal, onClose }: TemplateCreatedFormType) => {
+const TemplateCreatedForm = ({ isOpenModal, onClose, schedule }: TemplateCreatedFormType) => {
+  const isUpdateForm = schedule !== undefined;
   const methods = useForm<ScheduleForm>({
     resolver: zodResolver(TemplateCreatedFormValidationType),
     defaultValues: {
-      task: '',
-      type: options[0],
-      startedAt: formatDate(moment(new Date()), 'DD MMMM YYYY'),
-      repeatType: REPEAT_TYPE.Daily,
-      repeatEach: '1'
+      task: isUpdateForm ? schedule.task : '',
+      type: isUpdateForm ? schedule.type : options[0],
+      startedAt: formatDate(moment( isUpdateForm ?  new Date(schedule.startedAt) : new Date()), 'DD MMMM YYYY'),
+      repeatType: isUpdateForm ? schedule.repeatType : REPEAT_TYPE.Daily,
+      repeatEach: isUpdateForm ? schedule.repeatEach : '1'
     }
   });
   const {
@@ -39,7 +41,7 @@ const TemplateCreatedForm = ({ isOpenModal, onClose }: TemplateCreatedFormType) 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreateTask = handleSubmit(async (data) => {
+  const handleTask = handleSubmit(async(data) => {
     try {
       setIsLoading(true);
       const payload: ScheduleForm = {
@@ -49,10 +51,15 @@ const TemplateCreatedForm = ({ isOpenModal, onClose }: TemplateCreatedFormType) 
         repeatType: data.repeatType,
         repeatEach: data.repeatEach
       }
-      const response = await scheduleApi.createSchedule(payload);
+      let response;
+      if(isUpdateForm) {
+        response = await scheduleApi.updateSchedule(schedule?.id as number, payload);
+      } else {
+        response = await scheduleApi.createSchedule(payload);
+      }
       if (response.ok) {
         router.refresh();
-        toast.success('Created a schedule successfully');
+        toast.success( `${isUpdateForm ? 'Update' : 'Create' } a schedule successfully` );
       }
     } catch (error) {
       handleErrorApiResponse(error)
@@ -66,7 +73,7 @@ const TemplateCreatedForm = ({ isOpenModal, onClose }: TemplateCreatedFormType) 
     <Modal show={isOpenModal} onClose={onClose} popup>
       <Modal.Header/>
       <Modal.Body className='!h-80'>
-        <h1 className='text-xl lg:text-3xl font-bold'>Create a Shedule</h1>
+        <h1 className='text-xl lg:text-3xl font-bold'>{ isUpdateForm ? 'Update ' : 'Create '} a shedule</h1>
 
         <div className='my-8' >
           <FormField
@@ -80,7 +87,7 @@ const TemplateCreatedForm = ({ isOpenModal, onClose }: TemplateCreatedFormType) 
           />
         </div>
         <FormProvider {...methods}>
-          <form onSubmit={handleCreateTask} className="">
+          <form onSubmit={handleTask} className="">
             <div className='my-10' >
               <FormField
                 label='Task'
@@ -111,7 +118,7 @@ const TemplateCreatedForm = ({ isOpenModal, onClose }: TemplateCreatedFormType) 
               Cancel
               </Button>
               <Button isProcessing={isLoading} disabled={isLoading} type="submit" color="success" className='focus:z-1'>
-              Create a schedule
+              {isUpdateForm ? 'Update ': 'Create '} a schedule
               </Button>
             </div>
           </form>
