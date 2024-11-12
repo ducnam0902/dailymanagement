@@ -1,8 +1,9 @@
 'use client';
 import React, { useState } from 'react';
-import { Table, Dropdown, Badge, Button, Checkbox, Modal } from 'flowbite-react';
+import { Table, Badge, Button, Checkbox, Modal } from 'flowbite-react';
 import { FcCheckmark, FcCancel } from 'react-icons/fc';
 import TaskCreatedForm from './TaskCreatedForm';
+
 import { TaskType } from '@/utils/formType';
 import { handleErrorApiResponse, TaskTypeColor } from '@/utils/helper';
 import tasksApi from '@/api/tasks';
@@ -11,13 +12,14 @@ import { toast } from 'react-toastify';
 import { useAppContext } from '@/AppProvider';
 import { ACTION_ENUM } from '@/utils/initialContext';
 import HeadingDancing from './HeadingDancing';
+import Link from 'next/link';
+import routes from '@/utils/routes';
 
 interface TaskListInterface {
   taskData: TaskType[],
 }
 
 const TasksList = ({ taskData }: TaskListInterface) => {
-
   const [isAddTask, setIsAddTask] = useState(false);
   const [isConfirmUpdateModal, setIsConfirmUpdateModal] = useState<boolean>(false);
   const [listCheckedTask, setListCheckedTask] = useState<string[]>([]);
@@ -56,20 +58,18 @@ const TasksList = ({ taskData }: TaskListInterface) => {
 
   return (
     <div className='mx-8'>
-      <div className="flex flex-col sm:flex-row  sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-1 xs:gap-4 sm:flex-row  sm:items-center sm:justify-between">
         <HeadingDancing>Daily Tasks</HeadingDancing>
-        <div className='flex justify-between mb-4 sm:my-8 sm:justify-end gap-1 sm:gap-4'>
+        <div className='flex justify-center mb-4 sm:my-8 sm:justify-end gap-4'>
           <Button className='focus:z-1' color={'success'} onClick={() => setIsConfirmUpdateModal(true)} disabled={listCheckedTask.length === 0}>
             Update tasks
           </Button>
-          <Dropdown label="Create" outline color={'success'} dismissOnClick={false}>
-            <Dropdown.Item onClick={() => setIsAddTask(true)}>Create a task</Dropdown.Item>
-            <Dropdown.Item>
-              <Dropdown label="" dismissOnClick={false} placement='left' renderTrigger={() => <span>Template</span>}>
-                <Dropdown.Item className='w-60'>Create Template</Dropdown.Item>
-              </Dropdown>
-            </Dropdown.Item>
-          </Dropdown>
+          <Button className='focus:z-1' outline color={'success'} onClick={() => setIsAddTask(true)}>
+           Create a task
+          </Button>
+          <Button className='focus:z-1' outline color={'warning'} as={Link} href={routes.schedules}>
+            Schedule
+          </Button>
         </div>
       </div>
       <Table>
@@ -97,6 +97,7 @@ const TasksList = ({ taskData }: TaskListInterface) => {
         </Table.Body>
       </Table>
       {isAddTask && <TaskCreatedForm isOpenModal={isAddTask} onClose={() => setIsAddTask(false)}/>}
+
       {isConfirmUpdateModal && <Modal show={isConfirmUpdateModal} onClose={() => setIsConfirmUpdateModal(false)}>
         <Modal.Header>
           <h1 className='text-md sm:text-xl'>Confirm completed task?</h1>

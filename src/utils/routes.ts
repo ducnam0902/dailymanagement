@@ -4,7 +4,8 @@ const routes = {
   signIn: '/sign-in',
   task: '/tasks',
   routines: (startedDate: string) => `/routines/${startedDate}`,
-  expenses: '/expenses'
+  expenses: '/expenses',
+  schedules: '/schedules'
 }
 
 export default routes;
