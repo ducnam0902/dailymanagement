@@ -56,7 +56,7 @@ function RepeatTypeForm() {
           <>
             <Label
               htmlFor={'repeatEach'}
-              value={'Repeat each '}
+              value={'Repeat every '}
               className="text-md lg:text-lg"
             />
             <Controller
@@ -77,8 +77,8 @@ function RepeatTypeForm() {
               )}
             />
             <span className="font-medium text-gray-900 dark:text-white text-md lg:text-lg">
-              {repeatTypeValue === REPEAT_TYPE.Daily && 'days'}
-              {repeatTypeValue === REPEAT_TYPE.Monthly && 'month'}
+              {repeatTypeValue === REPEAT_TYPE.Daily && 'day(s)'}
+              {repeatTypeValue === REPEAT_TYPE.Monthly && 'month(s)'}
             </span>
           </>
         )}
@@ -86,7 +86,7 @@ function RepeatTypeForm() {
           <div className="flex items-center">
             <Label
               htmlFor={'repeatEach'}
-              value={'Repeat each '}
+              value={'Repeat every '}
               className="text-lg pr-4"
             />
             <Controller

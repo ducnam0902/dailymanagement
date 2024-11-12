@@ -62,7 +62,7 @@ const TasksList = ({ taskData }: TaskListInterface) => {
         <HeadingDancing>Daily Tasks</HeadingDancing>
         <div className='flex justify-center mb-4 sm:my-8 sm:justify-end gap-4'>
           <Button className='focus:z-1' color={'success'} onClick={() => setIsConfirmUpdateModal(true)} disabled={listCheckedTask.length === 0}>
-            Update tasks
+            Complete tasks
           </Button>
           <Button className='focus:z-1' outline color={'success'} onClick={() => setIsAddTask(true)}>
            Create a task
