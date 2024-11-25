@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'dailymanagement.zeabur.app',
+        hostname: process.env.NEXT_PUBLIC_SERVER_API.slice(8),
         pathname: '**'
       },
       {
@@ -15,6 +15,7 @@ const nextConfig = {
     ]
   },
   webpack: (config) => {
+    console.log(process.env.NEXT_PUBLIC_SERVER_API);
     config.resolve.fallback = { fs: false };
 
     return config;
