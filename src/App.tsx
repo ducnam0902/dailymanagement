@@ -1,26 +1,69 @@
 import { lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routes from "./utils/route";
+import ToastCustom from "./components/common/ToastCustom";
+import Route from "./components/Route";
+import NotFoundPage from "./pages/NotFound";
+import LoadingScreen from "./components/common/LoadingScreen";
 
 const Register = lazy(() => import("@/pages/Register"));
-const Homepage = lazy(() => import("@/pages/Home"));
 const Login = lazy(() => import("@/pages/Login"));
+
+const Homepage = lazy(() => import("@/pages/Home"));
 const Task = lazy(() => import("@/pages/Task"));
 const Routines = lazy(() => import("@/pages/Routines"));
 const Expenses = lazy(() => import("@/pages/Expenses"));
 const Schedule = lazy(() => import("@/pages/Schedule"));
 
+const routesForAuthenicatedOnly = [
+  {
+    element: <Route />,
+    children: [
+      {
+        path: routes.login,
+        element: <Login />,
+      },
+      {
+        path: routes.register,
+        element: <Register />,
+      },
+      {
+        path: routes.home,
+        element: <Homepage />,
+      },
+      {
+        path: routes.task,
+        element: <Task />,
+      },
+      {
+        path: routes.routines,
+        element: <Routines />,
+      },
+      {
+        path: routes.expenses,
+        element: <Expenses />,
+      },
+      {
+        path: routes.schedules,
+        element: <Schedule />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
+    ],
+  },
+];
+
+const router = createBrowserRouter([...routesForAuthenicatedOnly]);
+
 function App() {
   return (
-    <Routes>
-      <Route path={routes.home} element={<Homepage />} />
-      <Route path={routes.register} element={<Register/>} />
-      <Route path={routes.login} element={<Login/>} />
-      <Route path={routes.task} element={<Task/>} />
-      <Route path={routes.routines} element={<Routines/>} />
-      <Route path={routes.expenses} element={<Expenses/>} />
-      <Route path={routes.schedules} element={<Schedule/>} />
-    </Routes>
+    <main className="relative">
+      <RouterProvider router={router} />
+      <ToastCustom />
+      <LoadingScreen />
+    </main>
   );
 }
 

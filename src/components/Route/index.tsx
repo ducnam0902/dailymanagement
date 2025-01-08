@@ -1,0 +1,29 @@
+import routes from "@/utils/route";
+import React from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import Header from "../Header";
+
+const unAuthenicatedRoute = [routes.login, routes.register];
+
+const Route = () => {
+  const { pathname } = useLocation();
+  const isMatchUnAuthenPath = unAuthenicatedRoute.includes(pathname);
+  const userData = JSON.parse(localStorage.getItem("user"));
+
+  if (!userData?.id && !isMatchUnAuthenPath) {
+    return <Navigate to={routes.login} />;
+  }
+
+  if (userData?.id && isMatchUnAuthenPath) {
+    return <Navigate to={routes.home} />;
+  }
+
+  return (
+    <>
+      {userData?.id && <Header />}
+      <Outlet />
+    </>
+  );
+};
+
+export default Route;

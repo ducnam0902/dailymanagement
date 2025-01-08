@@ -1,16 +1,18 @@
 import React from "react";
 import { InputText } from "primereact/inputtext";
-
 import { Image } from "primereact/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
-import { SignInFormData, signInSchema } from "@/types/user.js";
+import { SignInFormData, signInSchema, UserData } from "@/types/user.js";
 import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
 import routes from "@/utils/route";
 import UserService from "@/services/UserService";
 import { useNavigate } from "react-router-dom";
 import PasswordCustom from "@/components/PasswordCustom";
+import { useAppDispatch } from "@/redux/hooks";
+import { showToast } from "@/redux/toast/toast";
+import { hideLoading, showLoading } from "@/redux/loading/loading";
 const Login = () => {
   const methods = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -18,21 +20,39 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = methods;
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const onSubmit = handleSubmit(async (data) => {
     try {
+      dispatch(showLoading());
       const resp = await UserService.signIn(data);
-      console.log(resp);
-      navigate(routes.home);
+      if (resp?.id) {
+        const { accessToken, refreshToken } = resp;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        const userData: UserData = {
+          ...resp,
+        };
+        localStorage.setItem("user", JSON.stringify(userData));
+        navigate(routes.home);
+        dispatch(
+          showToast({
+            type: "success",
+            summary: "Login Successfully!",
+          })
+        );
+      }
     } catch (error) {
       if (error?.response?.data?.errors?.length > 0) {
         error?.response?.data?.errors.forEach((item) => {
           setError(item.field, { message: item.message });
         });
       }
+    } finally {
+      dispatch(hideLoading());
     }
   });
 
@@ -51,7 +71,7 @@ const Login = () => {
               onSubmit={onSubmit}
               className="w-screen sm:w-96 mt-4 mx-auto px-6 sm:px-0"
             >
-              <section className="flex flex-col mb-8">
+              <section className="flex flex-col mb-4">
                 <label htmlFor="email" className="text-left text-base mb-2">
                   Email
                 </label>
@@ -67,30 +87,20 @@ const Login = () => {
                     {...register("email")}
                   />
                 </div>
-                {errors?.email && (
-                  <small className="mt-1 text-red-500 text-left">
-                    {errors.email.message}
-                  </small>
-                )}
+
+                <small className="mt-1 text-red-500 text-left h-5">
+                  {errors?.email?.message ?? ""}
+                </small>
               </section>
               <section className="flex flex-col">
-                <label htmlFor="password" className="text-left text-base mb-2">
-                  Password
-                </label>
-                <div className="flex ">
-                  <span className="p-inputgroup-addon">
-                    <i className="pi pi-key"></i>
-                  </span>
-                  <PasswordCustom name="password" placeholder="Password" />
-                </div>
-
-                {errors?.password && (
-                  <small className="mt-1 text-red-500 text-left">
-                    {errors.password.message}
-                  </small>
-                )}
+                <PasswordCustom
+                  name="password"
+                  placeholder="Password"
+                  label="Password"
+                />
               </section>
               <Button
+                disabled={isSubmitting}
                 type="submit"
                 label="Login"
                 className="mt-8 w-full bg-[#1c8c79] border-primary focus:shadow-2xl"
