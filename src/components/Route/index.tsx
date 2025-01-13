@@ -2,6 +2,8 @@ import routes from "@/utils/route";
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import Header from "../Header";
+import Sidebar from "../Sidebar";
+import clsx from "clsx";
 
 const unAuthenicatedRoute = [routes.login, routes.register];
 
@@ -21,7 +23,17 @@ const Route = () => {
   return (
     <>
       {userData?.id && <Header />}
-      <Outlet />
+      <section
+        className={clsx(
+          {
+            flex: userData?.id,
+          },
+          "border-t"
+        )}
+      >
+        {userData?.id && <Sidebar />}
+        <Outlet />
+      </section>
     </>
   );
 };

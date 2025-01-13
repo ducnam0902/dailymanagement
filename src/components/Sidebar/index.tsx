@@ -1,92 +1,71 @@
 import React from "react";
 import { Menu } from "primereact/menu";
-import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import routes from "@/utils/route";
-// const renderHeaderTemplate = (headerItem, option) => {
-//   console.log(option);
+import clsx from "clsx";
 
-//   return (
-//     <section
-//       className={cn("h-14 rounded-none py-4 px-6 flex items-center", {
-//         ["bg-[#45B04A]"]: option.active,
-//         ["text-white"]: option.active,
-//         ["text-[#8E9192]"]: !option.active,
-//       })}
-//       onClick={}
-//     >
-//       <i className={cn(headerItem.icon)} />
-//       <span className=" ml-4">{headerItem.label}</span>
-//       {headerItem?.items && (
-//         <span className="grow text-right">
-//           {option.active ? (
-//             <i className="pi pi-minus " />
-//           ) : (
-//             <i className="pi pi-plus" />
-//           )}
-//         </span>
-//       )}
-//     </section>
-//   );
-// };
+const renderHeaderTemplate = (headerItem) => {
+  return (
+    <section className={headerItem.className}>
+      <NavLink
+        to={headerItem.route}
+        className={({ isActive }) => {
+          return clsx(
+            "flex gap-2 p-4 items-center text-[#F9FEFE] hover:bg-primary",
+            {
+              "bg-primary": isActive,
+            }
+          );
+        }}
+      >
+        <i className={headerItem.icon} />
+        <p>{headerItem.label}</p>
+      </NavLink>
+    </section>
+  );
+};
 
 const Sidebar = () => {
-  const navigate = useNavigate();
   const items = [
     {
       label: "Dashboard",
       icon: "pi pi-trophy",
-      // template: renderHeaderTemplate,
-      command: () => {
-        navigate(routes.home);
-      },
+      template: renderHeaderTemplate,
+      route: routes.home,
     },
     {
-      label: "Daily routines",
-      icon: "pi pi-compass",
-      className: "bg-green",
-      // template: renderHeaderTemplate,
-      items: [
-        {
-          label: "Tasks",
-          icon: "pi pi-list-check",
-          command: () => {
-            navigate(routes.task);
-          },
-        },
-        {
-          label: "Schedules",
-          icon: "pi pi-calendar-clock",
-          command: () => {
-            navigate(routes.schedules);
-          },
-        },
-        {
-          label: "Tracking",
-          icon: "pi pi-chart-line",
-          command: () => {
-            navigate(routes.routines);
-          },
-        },
-      ],
+      label: "Tasks",
+      icon: "pi pi-list-check",
+      route: routes.task,
+      template: renderHeaderTemplate,
     },
     {
-      label: "Budgets",
-      icon: "pi pi-wallet",
-      // template: renderHeaderTemplate,
-      items: [
-        {
-          label: "Daily budget",
-          icon: "pi pi-money-bill",
-        },
-      ],
+      label: "Schedules",
+      icon: "pi pi-calendar-clock",
+      template: renderHeaderTemplate,
+      route: routes.schedules,
+    },
+    {
+      label: "Tracking",
+      icon: "pi pi-chart-line",
+      template: renderHeaderTemplate,
+      route: routes.routines,
+      className: "hidden sm:block",
+    },
+
+    {
+      label: "Daily budget",
+      template: renderHeaderTemplate,
+      icon: "pi pi-money-bill",
+      route: routes.expenses,
     },
   ];
 
   return (
-    <nav className="w-[16rem]">
+    <nav className="hidden sm:block sm:w-[12rem] lg:w-[16rem] h-[calc(100vh-107px)] bg-[#33495D]">
       <Menu
         model={items}
-        className="w-full md:w-20rem rounded-none  border-none"
+        className="w-full md:w-20rem rounded-none  border-none bg-[#33495D] py-0"
       />
     </nav>
   );
