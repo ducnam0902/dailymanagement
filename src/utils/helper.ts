@@ -29,3 +29,20 @@ export const ACCEPTED_IMAGE_TYPES = [
   "image/png",
   "image/webp",
 ];
+
+export const REPEAT_TYPE = {
+  Daily: "Daily",
+  Weekly: "Weekly",
+  Monthly: "Monthly",
+  Off: "Off",
+};
+
+export const WEEKDAY = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];

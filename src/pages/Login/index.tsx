@@ -71,7 +71,7 @@ const Login = () => {
               onSubmit={onSubmit}
               className="w-screen sm:w-96 mt-4 mx-auto px-6 sm:px-0"
             >
-              <section className="flex flex-col mb-4">
+              <section className="flex flex-col mb-8">
                 <label htmlFor="email" className="text-left text-base mb-2">
                   Email
                 </label>
@@ -87,10 +87,11 @@ const Login = () => {
                     {...register("email")}
                   />
                 </div>
-
-                <small className="mt-1 text-red-500 text-left h-5">
-                  {errors?.email?.message ?? ""}
-                </small>
+                {errors?.email && (
+                  <small className="mt-1 text-red-500 text-left">
+                    {errors.email.message}
+                  </small>
+                )}
               </section>
               <section className="flex flex-col">
                 <PasswordCustom

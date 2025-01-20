@@ -32,7 +32,9 @@ const Route = () => {
         )}
       >
         {userData?.id && <Sidebar />}
-        <Outlet />
+        <div className="w-full bg-[#EFF2FA]">
+          <Outlet />
+        </div>
       </section>
     </>
   );

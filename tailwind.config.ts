@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       boxShadow: {
-        "2xl": "0 0 0 0.2rem #AAE2BE",
+        "2xl": "0 0 0 0.1rem #AAE2BE",
       },
       colors: {
         primary: "#75D3C3",

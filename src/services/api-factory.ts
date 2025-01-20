@@ -10,7 +10,7 @@ http.interceptors.request.use(
     config.headers["Content-Type"] =
       config.data instanceof FormData ? "" : "application/json";
     if (accessToken) {
-      config.headers["Authorization"] = accessToken;
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -33,14 +33,12 @@ http.interceptors.response.use(
           `${envConfig.VITE_BASE_SERVER}/user/refresh`,
           {
             refreshToken,
-          },
-          {
-            withCredentials: true,
           }
         );
-        const { accessToken } = response.data;
 
+        const { accessToken } = response.data;
         localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
 
         // Retry the original request with the new token
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -49,7 +47,7 @@ http.interceptors.response.use(
         if (error.response.status) {
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
-          localStorage.removeItem("userData");
+          localStorage.removeItem("user");
           const request = error.config;
           request.headers.Authorization = "";
         }

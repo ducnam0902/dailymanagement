@@ -62,10 +62,10 @@ const Sidebar = () => {
   ];
 
   return (
-    <nav className="hidden sm:block sm:w-[12rem] lg:w-[16rem] h-[calc(100vh-107px)] bg-[#33495D]">
+    <nav className="hidden sm:block sm:min-w-[16rem] h-[calc(100vh-107px)] bg-[#33495D]">
       <Menu
         model={items}
-        className="w-full md:w-20rem rounded-none  border-none bg-[#33495D] py-0"
+        className="w-full rounded-none  border-none bg-[#33495D] py-0"
       />
     </nav>
   );
