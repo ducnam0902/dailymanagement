@@ -1,23 +1,21 @@
-import type { Config } from 'tailwindcss';
-import flowbite from 'flowbite-react/tailwind';
-const config: Config = {
+import type { Config } from "tailwindcss";
+
+export default {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    flowbite.content()
+    "./node_modules/primereact/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./index.html",
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
-      }
-    }
+      boxShadow: {
+        "2xl": "0 0 0 0.1rem #AAE2BE",
+      },
+      colors: {
+        primary: "#75D3C3",
+        secondary: "#AAE2BE",
+      },
+    },
   },
-  plugins: [
-    flowbite.plugin()
-  ]
-};
-export default config;
+  plugins: [],
+} satisfies Config;
