@@ -181,7 +181,6 @@ const AddTask = ({ onReloadTask }: IAddTask) => {
                         ref={ref}
                         value={value}
                         onChange={(e) => onChange(e.value)}
-                        showIcon
                         minDate={new Date()}
                         dateFormat="dd MM yy"
                         invalid={!!errors.dateCreated}
