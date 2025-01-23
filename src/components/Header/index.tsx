@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Image } from "primereact/image";
 import { UserData } from "@/types/user";
 import { Avatar } from "primereact/avatar";
@@ -11,8 +11,11 @@ import { hideLoading, showLoading } from "@/redux/loading/loading";
 import routes from "@/utils/route";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "@/redux/toast/toast";
-
+import { Button } from "primereact/button";
+import { Sidebar as SidebarContainer } from 'primereact/sidebar';
+import Sidebar from "../Sidebar";
 const Header = () => {
+  const [visible, setVisible] = useState(false);
   const menuRight = useRef(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -75,7 +78,12 @@ const Header = () => {
           popupAlignment="right"
           className="mt-2 py-0"
         />
+        <Button icon="pi pi-bars" className="sm:hidden ml-3" severity="contrast" text aria-label="Menu" onClick={() => setVisible(true)}/>
       </section>
+      <SidebarContainer header={<div className="text-white">Daily Management</div>} visible={visible} onHide={() => setVisible(false)} className="bg-[#33495D] w-[16rem]">
+
+        <Sidebar isMobile />
+      </SidebarContainer>
     </header>
   );
 };

@@ -89,8 +89,8 @@ const AddTask = ({ onReloadTask }: IAddTask) => {
         icon="pi pi-plus"
         label="Add Task"
         severity="info"
-        className="mr-4"
         onClick={() => setVisible(true)}
+        size="small"
       />
 
       <Dialog
