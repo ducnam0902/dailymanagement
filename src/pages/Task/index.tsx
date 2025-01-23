@@ -2,7 +2,7 @@ import HeadingTitle from "@/components/common/HeadingTitle";
 import TaskService from "@/services/TaskService";
 import { TaskData } from "@/types/tasks";
 import {
-  FORMAT_DATE_DD_MMMM_YYYY,
+  FORMAT_DATE_DD_MMM_YYYY,
   FORMAT_DATE_YYYY_MM_DD,
 } from "@/utils/format";
 import moment from "moment";
@@ -20,7 +20,7 @@ import { showToast } from "@/redux/toast/toast";
 import Type from "@/components/common/Type";
 
 const today = moment();
-const todayFormatUI = today.format(FORMAT_DATE_DD_MMMM_YYYY);
+const todayFormatUI = today.format(FORMAT_DATE_DD_MMM_YYYY);
 
 const listTemplate = (items) => {
   if (!items || items.length === 0) return null;
@@ -104,11 +104,11 @@ const Task = () => {
   };
 
   return (
-    <section className="mx-6">
+    <section className="mx-6 mb-6">
       <HeadingTitle title="Tasks" />
       <section className=" mb-6 flex justify-between items-center">
-        <h3 className="text-2xl font-semibold">Daily Tasks {todayFormatUI}</h3>
-        <div>
+        <h3 className="text-base sm:text-xl md:text-2xl font-semibold">Daily Tasks {todayFormatUI}</h3>
+        <div className="flex gap-2 flex-col lg:flex-row">
           <AddTask onReloadTask={fetchTodayTaskList} />
           <Button
             label="Complete Tasks"
@@ -117,6 +117,8 @@ const Task = () => {
             iconPos="right"
             disabled={selectedTasks?.length <= 0}
             onClick={() => setVisibleCompleteTask(true)}
+            size="small"
+            className="text-sm"
           />
         </div>
       </section>

@@ -4,6 +4,10 @@ import { NavLink } from "react-router-dom";
 import routes from "@/utils/route";
 import clsx from "clsx";
 
+interface ISidebar {
+  isMobile?: boolean,
+}
+
 const renderHeaderTemplate = (headerItem) => {
   return (
     <section className={headerItem.className}>
@@ -25,7 +29,7 @@ const renderHeaderTemplate = (headerItem) => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({isMobile = false}: ISidebar) => {
   const items = [
     {
       label: "Dashboard",
@@ -62,7 +66,9 @@ const Sidebar = () => {
   ];
 
   return (
-    <nav className="hidden sm:block sm:min-w-[16rem] h-[calc(100vh-107px)] bg-[#33495D]">
+    <nav className={clsx(' sm:block sm:min-w-[11rem] lg:min-w-[16rem] min-h-[calc(100vh-107px)] bg-[#33495D]', {
+      'hidden': !isMobile
+    })}>
       <Menu
         model={items}
         className="w-full rounded-none  border-none bg-[#33495D] py-0"
