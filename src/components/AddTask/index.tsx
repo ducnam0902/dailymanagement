@@ -94,6 +94,7 @@ const AddTask = ({ onReloadTask }: IAddTask) => {
       />
 
       <Dialog
+        className="z-500"
         draggable={false}
         header="Create a task"
         visible={visible}
