@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Controller, useForm } from "react-hook-form";
 import { TaskType } from "@/types/tasks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { upperFirst } from "lodash-es";
-import { Calendar } from "primereact/calendar";
 import moment from "moment";
 import { FORMAT_DATE_YYYY_MM_DD } from "@/utils/format";
 import { useAppDispatch } from "@/redux/hooks";
@@ -22,6 +20,8 @@ import ScheduleService from "@/services/ScheduleService";
 import { REPEAT_TYPE, WEEKDAY } from "@/utils/helper";
 import { Checkbox } from "primereact/checkbox";
 import clsx from "clsx";
+import CustomDropdown from "../common/CustomDropdown";
+import CustomCalendar from "../common/CustomCalendar";
 
 const taskTypeList = Object.values(TaskType).map((item) => ({
   label: upperFirst(item.toLocaleLowerCase()),
@@ -121,28 +121,19 @@ const AddSchedule = ({ onReloadSchedule }: IAddSchedule) => {
               name="type"
               control={control}
               render={({ field }) => {
-                const { ref, onChange, value } = field;
+                const { onChange, value } = field;
                 return (
                   <>
                     <label htmlFor="Type" className="text-left text-base mb-2">
                       Task type
                     </label>
                     <div className="w-full">
-                      <Dropdown
+                      <CustomDropdown
                         invalid={!!errors.type}
-                        ref={ref}
                         value={value}
                         options={taskTypeList}
-                        optionLabel="label"
-                        optionValue="value"
                         placeholder="Select a Task Type"
                         onChange={(e) => onChange(e.value)}
-                        className="w-full hover:border-primary focus-within:shadow-2xl focus-within:border-primary"
-                        pt={{
-                          item: {
-                            className: "text-black",
-                          },
-                        }}
                       />
                     </div>
                   </>
@@ -178,7 +169,7 @@ const AddSchedule = ({ onReloadSchedule }: IAddSchedule) => {
               name="startedAt"
               control={control}
               render={({ field }) => {
-                const { ref, onChange, value } = field;
+                const {  onChange, value } = field;
                 return (
                   <>
                     <label
@@ -188,14 +179,12 @@ const AddSchedule = ({ onReloadSchedule }: IAddSchedule) => {
                       Date
                     </label>
                     <div className="p-inputgroup flex-1">
-                      <Calendar
-                        ref={ref}
-                        value={value}
-                        onChange={(e) => onChange(e.value)}
-                        icon={() => <i className="pi pi-clock" />}
-                        minDate={new Date()}
-                        dateFormat="dd MM yy"
-                        invalid={!!errors.startedAt}
+                      <CustomCalendar
+                       value={value}
+                       onChange={(e) => onChange(e.value)}
+                       minDate={new Date()}
+                       dateFormat="dd MM yy"
+                       invalid={!!errors.startedAt}
                       />
                     </div>
                   </>
@@ -213,7 +202,7 @@ const AddSchedule = ({ onReloadSchedule }: IAddSchedule) => {
             name="repeatType"
             control={control}
             render={({ field }) => {
-              const { ref, onChange, value } = field;
+              const { onChange, value } = field;
               const handleChangeRepeatType = (e) => {
                 const newRepeatType = e.value;
                 onChange(newRepeatType);
@@ -237,21 +226,12 @@ const AddSchedule = ({ onReloadSchedule }: IAddSchedule) => {
                       Repeat type
                     </label>
                     <div className="w-full">
-                      <Dropdown
+                      <CustomDropdown
                         invalid={!!errors.repeatType}
-                        ref={ref}
                         value={value}
                         options={repeatOptions}
-                        optionLabel="label"
-                        optionValue="value"
                         placeholder="Select a repeat type"
                         onChange={handleChangeRepeatType}
-                        className="w-full hover:border-primary focus-within:shadow-2xl focus-within:border-primary"
-                        pt={{
-                          item: {
-                            className: "text-black",
-                          },
-                        }}
                       />
                     </div>
                     {errors?.repeatType && (
@@ -262,33 +242,33 @@ const AddSchedule = ({ onReloadSchedule }: IAddSchedule) => {
                   </section>
                   {(value === REPEAT_TYPE.Daily ||
                     value === REPEAT_TYPE.Monthly) && (
-                    <section className="flex items-center mb-8 justify-start">
-                      <label
-                        htmlFor="repeatEach"
-                        className="text-left text-base mr-4"
-                      >
-                        Repeat Each
-                      </label>
+                      <section className="flex items-center mb-8 justify-start">
+                        <label
+                          htmlFor="repeatEach"
+                          className="text-left text-base mr-4"
+                        >
+                          Repeat Each
+                        </label>
 
-                      <div>
-                        <InputText
-                          id="repeatEach"
-                          className="hover:border-secondary focus:border-secondary focus:shadow-2xl w-20"
-                          invalid={!!errors.repeatEach}
-                          {...register("repeatEach")}
-                        />
-                        {errors?.repeatEach && (
-                          <small className="mt-1 text-red-500 text-left h-5 w-10">
-                            {errors.repeatEach.message}
-                          </small>
-                        )}
-                      </div>
-                      <span className="font-medium text-base ml-4">
-                        {value === REPEAT_TYPE.Daily && "day(s)"}
-                        {value === REPEAT_TYPE.Monthly && "month(s)"}
-                      </span>
-                    </section>
-                  )}
+                        <div>
+                          <InputText
+                            id="repeatEach"
+                            className="hover:border-secondary focus:border-secondary focus:shadow-2xl w-20"
+                            invalid={!!errors.repeatEach}
+                            {...register("repeatEach")}
+                          />
+                          {errors?.repeatEach && (
+                            <small className="mt-1 text-red-500 text-left h-5 w-10">
+                              {errors.repeatEach.message}
+                            </small>
+                          )}
+                        </div>
+                        <span className="font-medium text-base ml-4">
+                          {value === REPEAT_TYPE.Daily && "day(s)"}
+                          {value === REPEAT_TYPE.Monthly && "month(s)"}
+                        </span>
+                      </section>
+                    )}
 
                   {value === REPEAT_TYPE.Weekly && (
                     <section className="flex flex-col mb-8">

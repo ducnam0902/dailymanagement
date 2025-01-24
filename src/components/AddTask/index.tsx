@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Dropdown } from "primereact/dropdown";
+import CustomDropdown from "../common/CustomDropdown";
 import { InputText } from "primereact/inputtext";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/types/tasks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { upperFirst } from "lodash-es";
-import { Calendar } from "primereact/calendar";
+import CustomCalendar from "../common/CustomCalendar";
 import moment from "moment";
 import { FORMAT_DATE_YYYY_MM_DD } from "@/utils/format";
 import { useAppDispatch } from "@/redux/hooks";
@@ -110,29 +110,21 @@ const AddTask = ({ onReloadTask }: IAddTask) => {
               name="type"
               control={control}
               render={({ field }) => {
-                const { ref, onChange, value } = field;
+                const { onChange, value } = field;
                 return (
                   <>
                     <label htmlFor="Type" className="text-left text-base mb-2">
                       Task type
                     </label>
                     <div className="w-full">
-                      <Dropdown
+                      <CustomDropdown
                         invalid={!!errors.type}
-                        ref={ref}
-                        value={value}
-                        options={taskTypeList}
-                        optionLabel="label"
-                        optionValue="value"
                         placeholder="Select a Task Type"
                         onChange={(e) => onChange(e.value)}
-                        className="w-full hover:border-primary focus-within:shadow-2xl focus-within:border-primary"
-                        pt={{
-                          item: {
-                            className: "text-black",
-                          },
-                        }}
+                        value={value}
+                        options={taskTypeList}
                       />
+
                     </div>
                   </>
                 );
@@ -167,7 +159,7 @@ const AddTask = ({ onReloadTask }: IAddTask) => {
               name="dateCreated"
               control={control}
               render={({ field }) => {
-                const { ref, onChange, value } = field;
+                const { onChange, value } = field;
                 return (
                   <>
                     <label
@@ -177,19 +169,12 @@ const AddTask = ({ onReloadTask }: IAddTask) => {
                       Date
                     </label>
                     <div className="p-inputgroup flex-1">
-                      <Calendar
-                        ref={ref}
+                      <CustomCalendar
                         value={value}
                         onChange={(e) => onChange(e.value)}
                         minDate={new Date()}
                         dateFormat="dd MM yy"
                         invalid={!!errors.dateCreated}
-                        pt={{
-                          input: {
-                            className:
-                              "hover:border-secondary focus:border-secondary shadow-2xl",
-                          },
-                        }}
                       />
                     </div>
                   </>
