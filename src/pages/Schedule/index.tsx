@@ -1,6 +1,7 @@
 import AddSchedule from "@/components/AddSchedule";
 import HeadingTitle from "@/components/common/HeadingTitle";
 import Type from "@/components/common/Type";
+import UpdateSchedule from "@/components/UpdateSchedule";
 import { useAppDispatch } from "@/redux/hooks";
 import { hideLoading, showLoading } from "@/redux/loading/loading";
 import { showToast } from "@/redux/toast/toast";
@@ -77,7 +78,7 @@ const Schedule = () => {
     };
     return (
       <section className="flex flex-col lg:flex-row gap-2 ">
-        <Button label="Update" severity="success" size="small" />
+        <UpdateSchedule data={data} onReloadSchedule={handleReloadSchedule}/>
         <Button
           label="Delete"
           severity="danger"
