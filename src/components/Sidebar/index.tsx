@@ -29,7 +29,7 @@ const renderHeaderTemplate = (headerItem) => {
   );
 };
 
-const Sidebar = ({isMobile = false}: ISidebar) => {
+const Sidebar = ({ isMobile = false }: ISidebar) => {
   const items = [
     {
       label: "Dashboard",
