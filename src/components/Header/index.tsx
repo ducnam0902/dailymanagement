@@ -78,7 +78,7 @@ const Header = () => {
           popupAlignment="right"
           className="mt-2 py-0"
         />
-        <Button icon="pi pi-bars" className="sm:hidden ml-3" severity="contrast" text aria-label="Menu" onClick={() => setVisible(true)}/>
+        <Button icon="pi pi-bars" className="sm:hidden ml-3" severity="contrast" text aria-label="Menu" onClick={() => setVisible(true)} />
       </section>
       <SidebarContainer header={<div className="text-white">Daily Management</div>} visible={visible} onHide={() => setVisible(false)} className="bg-[#33495D] w-[16rem]">
 

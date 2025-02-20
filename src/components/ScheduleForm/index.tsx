@@ -64,8 +64,6 @@ const ScheduleForm = ({ schedule, onCloseModal, onReloadSchedule }: IScheduleFor
   const onSubmit = handleSubmit(async (data) => {
     try {
       dispatch(showLoading());
-      console.log(data.startedAt);
-      console.log(moment(data.startedAt).format(FORMAT_DATE_HH_MM));
       const payload: CreateScheduleData = {
         ...data,
         startedAt: moment(data.startedAt).format(FORMAT_DATE_YYYY_MM_DD),
