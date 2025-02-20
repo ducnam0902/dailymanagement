@@ -37,6 +37,8 @@ export type ScheduleForm = z.infer<typeof AddScheduleSchema>;
 
 export type CreateScheduleData = Omit<ScheduleForm, "startedAt"> & {
   startedAt: string;
+  generatedAt: string;
+  timezone: string;
 };
 
 export type ScheduleType = {
@@ -48,4 +50,5 @@ export type ScheduleType = {
   type: string;
   repeatType: keyof typeof REPEAT_TYPE;
   repeatEach: string;
+  generatedAt: string;
 };

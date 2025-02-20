@@ -30,7 +30,9 @@ const renderRepeatColumn = (data: ScheduleType) => {
   return (
     <div>
       <p>{`Repeat: ${data.repeatType}`}</p>
-      <p>{renderRepeatEach(data.repeatType, data.repeatEach)}</p>
+      {
+        data.repeatType !== REPEAT_TYPE.Off && <p>{renderRepeatEach(data.repeatType, data.repeatEach)}</p>
+      }
     </div>
   );
 };
@@ -78,7 +80,7 @@ const Schedule = () => {
     };
     return (
       <section className="flex flex-col lg:flex-row gap-2 ">
-        <UpdateSchedule data={data} onReloadSchedule={handleReloadSchedule}/>
+        <UpdateSchedule data={data} onReloadSchedule={handleReloadSchedule} />
         <Button
           label="Delete"
           severity="danger"
