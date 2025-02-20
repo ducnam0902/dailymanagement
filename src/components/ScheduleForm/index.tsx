@@ -20,8 +20,9 @@ import {
 import ScheduleService from "@/services/ScheduleService";
 import { TaskType } from "@/types/tasks";
 import { zodResolver } from "@hookform/resolvers/zod";
-import moment from "moment";
-import { FORMAT_DATE_YYYY_MM_DD } from "@/utils/format";
+import moment from 'moment';
+import 'moment-timezone';
+import { FORMAT_DATE_HH_MM, FORMAT_DATE_YYYY_MM_DD } from "@/utils/format";
 interface IScheduleForm {
   schedule?: ScheduleType,
   onCloseModal: () => void,
@@ -45,7 +46,7 @@ const ScheduleForm = ({ schedule, onCloseModal, onReloadSchedule }: IScheduleFor
     defaultValues: {
       task: isAddForm ? '' : schedule.task,
       type: isAddForm ? '' : schedule.type,
-      startedAt: isAddForm ? new Date() : new Date(schedule.startedAt),
+      startedAt: isAddForm ? new Date() : new Date(schedule.startedAt + "T" + schedule.generatedAt),
       repeatType: isAddForm ? REPEAT_TYPE.Off : schedule.repeatType,
       repeatEach: !isAddForm ? schedule.repeatEach : '',
     },
@@ -63,12 +64,19 @@ const ScheduleForm = ({ schedule, onCloseModal, onReloadSchedule }: IScheduleFor
   const onSubmit = handleSubmit(async (data) => {
     try {
       dispatch(showLoading());
+      console.log(data.startedAt);
+      console.log(moment(data.startedAt).format(FORMAT_DATE_HH_MM));
       const payload: CreateScheduleData = {
         ...data,
         startedAt: moment(data.startedAt).format(FORMAT_DATE_YYYY_MM_DD),
+        generatedAt: moment(data.startedAt).format(FORMAT_DATE_HH_MM),
+        timezone: moment.tz.guess(),
       };
-      const resp = isAddForm ?  await ScheduleService.createSchedule(payload) :
-       await ScheduleService.updateSchedule(schedule.id, payload);
+      if (data.repeatType === REPEAT_TYPE.Off) {
+        payload.repeatEach = '';
+      }
+      const resp = isAddForm ? await ScheduleService.createSchedule(payload) :
+        await ScheduleService.updateSchedule(schedule.id, payload);
       if (resp.ok) {
         dispatch(
           showToast({
@@ -169,6 +177,8 @@ const ScheduleForm = ({ schedule, onCloseModal, onReloadSchedule }: IScheduleFor
                     minDate={new Date()}
                     dateFormat="dd MM yy"
                     invalid={!!errors.startedAt}
+                    showTime
+                    hourFormat="24"
                   />
                 </div>
               </>
